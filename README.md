@@ -2,7 +2,7 @@
 
 A modern, high-performance trading automation platform built with React, TypeScript, and Ant Design. This platform enables users to create, manage, and execute trading strategies with real-time market data integration.
 
-## 🚀 Features
+## 🚀 Features 
 
 ### Core Functionality
 - **Strategy Management**
