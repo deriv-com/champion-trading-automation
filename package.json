@@ -8,7 +8,6 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "postinstall": "node scripts/setup-hooks.js",
     "test:pre-commit": "node scripts/test-pre-commit.js",
     "test:build-error": "node scripts/test-build-error.js",
     "test:build-error:restore": "node scripts/test-build-error.js --restore"
@@ -18,7 +17,8 @@
     "antd": "^5.24.0",
     "axios": "^1.7.9",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",

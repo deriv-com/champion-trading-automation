@@ -1,4 +1,5 @@
 import { AuthorizeResponse } from '../types/auth';
+import { configService } from '../services/config/configService';
 
 interface AuthState {
   authorizeResponse: AuthorizeResponse | null;
@@ -53,8 +54,8 @@ class AuthStore {
       'loginid': this.state.authorizeResponse?.authorize.loginid || '',
       'authorize': this.state.authParams?.token1 || '',
       'userid': String(this.state.authorizeResponse?.authorize.userId || ''),
-      'auth-url': String(import.meta.env.VITE_Auth_Url || ''),
-      'deriv-url': String(import.meta.env.VITE_Deriv_Url || '')
+      'auth-url': configService.getValue('authUrl'),
+      'deriv-url': configService.getValue('derivUrl')
     };
   }
 }

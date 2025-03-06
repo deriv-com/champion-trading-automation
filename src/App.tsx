@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Layout, Row, Col } from "antd";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { oauthService } from "./services/oauth/oauthService";
 import { useWebSocket } from "./hooks/useWebSocket";
 import { useAuth } from "./contexts/AuthContext";
@@ -10,6 +11,7 @@ import { Header } from "./components/Header";
 import { Navigation } from "./components/Navigation";
 import { Settings } from "./components/Settings";
 import Positions from "./components/Positions";
+import { ConfigEndpoint } from "./components/ConfigEndpoint";
 
 import "./styles/App.scss";
 
@@ -45,7 +47,7 @@ function MainContent() {
   );
 }
 
-function App() {
+function MainApp() {
   const { authParams, setAuthParams, authorizeResponse, setAuthorizeResponse } =
     useAuth();
 
@@ -104,6 +106,17 @@ function App() {
         <MainContent />
       </Content>
     </Layout>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/endpoint" element={<ConfigEndpoint />} />
+        <Route path="/*" element={<MainApp />} />
+      </Routes>
+    </Router>
   );
 }
 

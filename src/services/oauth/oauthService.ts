@@ -1,20 +1,19 @@
-class OAuthService {
-  private authUrl: string;
-  private appId: string;
+import { configService } from '../config/configService';
 
-  constructor() {
-    this.authUrl = import.meta.env.VITE_OAUTH_URL;
-    this.appId = import.meta.env.VITE_OAUTH_APP_ID;
-  }
+class OAuthService {
+  constructor() {}
 
   public initiateLogin(): void {
+    const appId = configService.getValue('oauthAppId');
+    const authUrl = configService.getValue('oauthUrl');
+    
     const params = new URLSearchParams({
-      app_id: this.appId,
+      app_id: appId,
       l: 'en',
       route: window.location.pathname,
     });
 
-    window.location.href = `${this.authUrl}?${params.toString()}`;
+    window.location.href = `${authUrl}?${params.toString()}`;
   }
 
   public getAuthParams(): Record<string, string> | null {
