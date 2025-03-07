@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { PageTitle } from '../PageTitle';
 import { StrategyCard } from '../StrategyCard';
 import { StrategyDrawer } from '../StrategyDrawer';

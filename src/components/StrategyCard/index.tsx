@@ -1,4 +1,3 @@
-import React from 'react';
 import { RobotFilled, RightOutlined } from '@ant-design/icons';
 import './styles.scss';
 
