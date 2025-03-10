@@ -12,83 +12,31 @@ import { InputField } from "../InputField";
 import { SlideDrawer } from "../SlideDrawer";
 import { StrategyList } from "../StrategyList";
 import "./styles.scss";
+import { useNavigate } from "react-router-dom";
+
+const getStoredBots = () => {
+  const storedBots = localStorage.getItem("bots");
+  return storedBots ? JSON.parse(storedBots) : [];
+};
 
 // Mock data for demonstration
-const mockBots = [
-  {
-    id: "1",
+const generateMockBots = () => {
+  return Array.from({ length: 6 }, (_, index) => ({
+    id: (index + 1).toString(),
     name: "Martingale acc test",
     market: "Volatility 100 (1s) Index",
     tradeType: "Rise/Fall",
-    strategy: "Repeat",
+    strategy: ["Repeat", "Martingale", "D'Alembert", "Oscar's Grind", "Fibonacci"][index % 5],
     params: [
       { key: "repeat_trade", label: "Repeat trade", value: 2 },
       { key: "initial_stake", label: "Initial stake", value: "10.00" },
       { key: "take_profit", label: "Take profit", value: "100.00" },
       { key: "stop_loss", label: "Stop loss", value: "50.00" },
     ],
-  },
-  {
-    id: "2",
-    name: "Martingale acc test",
-    market: "Volatility 100 (1s) Index",
-    tradeType: "Rise/Fall",
-    strategy: "Repeat",
-    params: [
-      { key: "repeat_trade", label: "Repeat trade", value: 3 },
-      { key: "initial_stake", label: "Initial stake", value: "15.00" },
-    ],
-  },
-  {
-    id: "3",
-    name: "Martingale acc test",
-    market: "Volatility 100 (1s) Index",
-    tradeType: "Rise/Fall",
-    strategy: "Martingale",
-    params: [
-      { key: "repeat_trade", label: "Repeat trade", value: 2 },
-      { key: "initial_stake", label: "Initial stake", value: "10.00" },
-      { key: "multiplier", label: "Multiplier", value: 2.5 },
-    ],
-  },
-  {
-    id: "4",
-    name: "Martingale acc test",
-    market: "Volatility 100 (1s) Index",
-    tradeType: "Rise/Fall",
-    strategy: "D'Alembert",
-    params: [
-      { key: "repeat_trade", label: "Repeat trade", value: 2 },
-      { key: "initial_stake", label: "Initial stake", value: "10.00" },
-      { key: "step_size", label: "Step size", value: "5.00" },
-    ],
-  },
-  {
-    id: "5",
-    name: "Martingale acc test",
-    market: "Volatility 100 (1s) Index",
-    tradeType: "Rise/Fall",
-    strategy: "Oscar's Grind",
-    params: [
-      { key: "repeat_trade", label: "Repeat trade", value: 2 },
-      { key: "initial_stake", label: "Initial stake", value: "10.00" },
-      { key: "step_size", label: "Step size", value: "1.00" },
-      { key: "target_profit", label: "Target profit", value: "20.00" },
-    ],
-  },
-  {
-    id: "6",
-    name: "Martingale acc test",
-    market: "Volatility 100 (1s) Index",
-    tradeType: "Rise/Fall",
-    strategy: "Fibonacci",
-    params: [
-      { key: "repeat_trade", label: "Repeat trade", value: 2 },
-      { key: "initial_stake", label: "Initial stake", value: "10.00" },
-      { key: "max_level", label: "Max level", value: 5 },
-    ],
-  },
-];
+  }));
+};
+
+const mockBots = generateMockBots();
 
 /**
  * Bots: Displays a list of trading bots with search functionality.
@@ -96,7 +44,11 @@ const mockBots = [
  * Output: JSX.Element - Component with bot cards, search functionality, and action buttons
  */
 export function Bots() {
-  const [bots, setBots] = useState(mockBots);
+  const [bots, setBots] = useState(getStoredBots());
+
+useEffect(() => {
+  localStorage.setItem("bots", JSON.stringify(bots));
+}, [bots]);
   const [searchVisible, setSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isStrategyDrawerOpen, setIsStrategyDrawerOpen] = useState(false);
@@ -112,13 +64,10 @@ export function Bots() {
     // Implement bot running logic here
   };
 
-  /**
-   * handleAddBot: Handles the action of adding a new bot.
-   * Inputs: None
-   * Output: void - Currently logs the action to console
-   */
+  const navigate = useNavigate();
+
   const handleAddBot = () => {
-    setIsStrategyDrawerOpen(true);
+    navigate("/discover");
   };
 
   const handleCloseStrategyDrawer = () => {
@@ -144,7 +93,6 @@ export function Bots() {
   const handleCloseSearch = () => {
     setSearchVisible(false);
     setSearchQuery("");
-    setBots(mockBots); // Reset to original bots
   };
 
   /**
@@ -157,8 +105,7 @@ export function Bots() {
     setSearchQuery(query);
 
     if (query.trim() === "") {
-      setBots(mockBots);
-      return;
+        return;
     }
 
     // Filter bots based on search query
@@ -169,7 +116,6 @@ export function Bots() {
         bot.strategy.toLowerCase().includes(query.toLowerCase())
     );
 
-    setBots(filteredBots);
   };
 
   // Close search when clicking outside
@@ -191,7 +137,13 @@ export function Bots() {
     };
   }, [searchVisible]);
 
-  return (
+  const handleDeleteBot = (botId: string) => {
+    const updatedBots = bots.filter(bot => bot.id !== botId);
+    setBots(updatedBots);
+    localStorage.setItem("bots", JSON.stringify(updatedBots));
+  };
+
+ return (
     <div className="bots-container">
       <div className="bots-header">
         <PageTitle title="Bots list" />
@@ -253,6 +205,7 @@ export function Bots() {
               key={bot.id}
               bot={bot}
               onRun={() => handleRunBot(bot.id)}
+              onDelete={() => handleDeleteBot(bot.id)}
             />
           ))
         ) : (
