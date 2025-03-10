@@ -55,6 +55,48 @@
   padding: 0 16px;
 }
 
+.empty-bots {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-top: 20px;
+
+  .empty-bots-card {
+    border: 2px dashed var(--text-secondary);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    gap: 12px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+
+    .empty-bots-add-btn {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    &-content {
+      display: flex;
+      flex-direction: column;
+
+      &-title {
+        font-size: 14px;
+        font-weight: bold;
+        color: var(--text-primary);
+        margin-bottom: 10px;
+      }
+
+      &-subtitle {
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+    }
+
+  }
+}
+
 .search-overlay {
   position: absolute;
   top: 0;
