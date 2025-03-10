@@ -37,18 +37,6 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
-    proxy: {
-      '/api/v2': {
-        target: process.env.VITE_API_URL || 'https://pr92.mobile-bot.deriv.dev',
-        changeOrigin: true,
-        secure: false,
-        ws: true,
-        configure: (proxy) => {
-          proxy.on('error', (err) => {
-            console.error('Proxy error:', err);
-          });
-        }
-      }
-    }
+    // Proxy removed - now using direct API calls
   },
 })

@@ -1,4 +1,5 @@
 import { WebSocketResponse, WebSocketRequest } from '../../types/websocket';
+import { configService } from '../config/configService';
 
 type MessageHandler = (data: WebSocketResponse) => void;
 
@@ -7,13 +8,14 @@ class WebSocketService {
   private ws: WebSocket | null = null;
   private messageHandler: MessageHandler | null = null;
   private pingInterval: number | null = null;
-  private wsUrl: string;
   private isConnecting = false;
 
-  private constructor() {
-    const baseUrl = import.meta.env.VITE_WS_URL;
-    const appId = import.meta.env.VITE_OAUTH_APP_ID;
-    this.wsUrl = `${baseUrl}?app_id=${appId}&l=en&brand=deriv`;
+  private constructor() {}
+  
+  private getWsUrl(): string {
+    const wsUrl = configService.getValue('wsUrl');
+    const appId = configService.getValue('oauthAppId');
+    return `${wsUrl}?app_id=${appId}&l=en&brand=deriv`;
   }
 
   public static getInstance(): WebSocketService {
@@ -57,7 +59,7 @@ class WebSocketService {
       this.ws = null;
     }
 
-    this.ws = new WebSocket(this.wsUrl);
+    this.ws = new WebSocket(this.getWsUrl());
 
     this.ws.onopen = () => {
       console.log('WebSocket connected');

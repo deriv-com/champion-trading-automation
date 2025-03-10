@@ -24,7 +24,7 @@ export function SSEProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const canConnect = !connectionRef.current && 
       authorizeResponse?.authorize.loginid && 
-      authParams?.token1 && 
+      authParams?.token1 &&
       import.meta.env.VITE_Auth_Url;
 
     if (!canConnect) {
@@ -35,7 +35,7 @@ export function SSEProvider({ children }: { children: ReactNode }) {
     connectionRef.current = true;
 
     const handlers = sseService.connect({
-      url: '/api/v2/sse',
+      url: `${import.meta.env.VITE_API_URL}/api/v2/sse`,
       headers: {
         loginid: String(authorizeResponse.authorize.loginid || ''),
         authorize: String(authParams?.token1 || ''),

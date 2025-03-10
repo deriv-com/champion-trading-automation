@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_BASE_URL,
+  BASE_URL: import.meta.env.VITE_API_URL,
   WS_URL: import.meta.env.VITE_WS_URL,
   TIMEOUT: 30000, // 30 seconds
   RETRY_ATTEMPTS: 3,
@@ -7,11 +7,11 @@ export const API_CONFIG = {
 
 export const API_ENDPOINTS = {
   // Trading endpoints
-  REPEAT_TRADE: 'repeat-trade',
-  IS_TRADING: 'is-trading',
-  STOP_TRADING: 'stop-trading',
-  Threshold_Trade: 'threshold-trade',
-  Martingale_Trade: 'martingale-trade',
+  REPEAT_TRADE: '/api/v2/repeat-trade',
+  IS_TRADING: '/api/v2/is-trading',
+  STOP_TRADING: '/api/v2/stop-trading',
+  Threshold_Trade: '/api/v2/threshold-trade',
+  Martingale_Trade: '/api/v2/martingale-trade',
   // WebSocket endpoint
   WS: '/ws',
 }

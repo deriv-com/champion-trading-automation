@@ -2,7 +2,9 @@
 node_modules
 dist
 dist-ssr
+public
 *.local
+.firebase
 
 # Environment files
 .env
