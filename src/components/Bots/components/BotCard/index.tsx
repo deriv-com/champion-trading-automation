@@ -27,6 +27,11 @@ interface BotCardProps {
   onRun: () => void;
 }
 
+/**
+ * BotCard: Card component that displays a trading bot with its details and actions.
+ * Inputs: { bot: Bot, onRun: () => void } - Bot data and callback for run action
+ * Output: JSX.Element - Card with bot details, parameters, and action buttons
+ */
 export function BotCard({ bot, onRun }: BotCardProps) {
   return (
     <div className="bot-card">

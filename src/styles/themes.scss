@@ -44,7 +44,7 @@
   // Base colors - using a more consistent dark theme
   --bg-primary: #121212;
   --bg-secondary: #1e1e1e;
-  --bg-elevated: #2c2c2c;
+  --bg-elevated: #1a1a1a;
   --text-primary: rgba(255, 255, 255, 0.85);
   --text-secondary: rgba(255, 255, 255, 0.65);
   --border-color: #333333;
@@ -58,7 +58,7 @@
   --hover-bg: #2c2c2c;
   --drawer-bg: #1e1e1e;
   --sidebar-bg: #1e1e1e;
-  --input-bg: #2c2c2c;
+  --input-bg: #121212;
   --input-border: #333333;
   --shadow-color: rgba(0, 0, 0, 0.3);
   
@@ -175,15 +175,6 @@
     border-color: var(--border-color);
     color: var(--text-primary);
     
-    &:hover {
-      border-color: var(--accent-color);
-    }
-    
-    &:focus, &-focused {
-      border-color: var(--accent-color);
-      box-shadow: 0 0 0 2px rgba(0, 208, 255, 0.2);
-    }
-    
     &::placeholder {
       color: var(--text-secondary);
     }
@@ -195,15 +186,6 @@
     
     .ant-input {
       background-color: transparent;
-    }
-    
-    &:hover {
-      border-color: var(--accent-color);
-    }
-    
-    &:focus, &-focused {
-      border-color: var(--accent-color);
-      box-shadow: 0 0 0 2px rgba(0, 208, 255, 0.2);
     }
   }
   
@@ -479,8 +461,8 @@
     
     &__deposit-btn {
       background-color: var(--accent-color);
-      color: #fff;
-      
+      color: var(--text-primary);
+            
       &:hover {
         opacity: 0.85;
       }

@@ -45,6 +45,11 @@ interface StatusConfig {
   text: string;
 }
 
+/**
+ * getStatusConfig: Determines the visual status configuration based on process state.
+ * Inputs: process: ProcessInfo - The process object to evaluate
+ * Output: StatusConfig - Object with icon, color, and text for the process status
+ */
 const getStatusConfig = (process: ProcessInfo): StatusConfig => {
   if (process.error) {
     return {
@@ -69,6 +74,11 @@ const getStatusConfig = (process: ProcessInfo): StatusConfig => {
   };
 };
 
+/**
+ * formatDateTime: Formats a date string to a localized time string.
+ * Inputs: dateStr: string - The date string to format
+ * Output: string - Formatted time string or empty string for invalid dates
+ */
 const formatDateTime = (dateStr: string) => {
   if (!dateStr || dateStr === '0001-01-01T00:00:00Z') return '';
   return new Date(dateStr).toLocaleTimeString();
@@ -79,6 +89,11 @@ interface ProcessingCardProps {
   onRemove: (id: string) => void;
 }
 
+/**
+ * ProcessingCard: Card component that displays trading process information with status indicators.
+ * Inputs: { process: ProcessInfo, onRemove: (id: string) => void } - Process data and removal callback
+ * Output: JSX.Element - Card with process details, status indicators, and progress visualization
+ */
 function ProcessingCard({ process, onRemove }: ProcessingCardProps) {
   const [fadeOut, setFadeOut] = useState(false);
   const statusConfig = getStatusConfig(process);
@@ -189,6 +204,11 @@ interface ProcessingStackProps {
   onRemoveProcess?: (id: string) => void;
 }
 
+/**
+ * ProcessingStack: Container component that renders a stack of processing cards for active trades.
+ * Inputs: { processes: ProcessInfo[], onRemoveProcess?: (id: string) => void } - List of processes and optional removal callback
+ * Output: JSX.Element | null - Stack of ProcessingCard components or null when no processes exist
+ */
 export default function ProcessingStack({ processes, onRemoveProcess }: ProcessingStackProps) {
   if (processes.length === 0) return null;
 

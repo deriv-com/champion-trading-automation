@@ -41,7 +41,7 @@ export function StrategyList() {
   return (
     <div className="strategy-list-page">
       <PageTitle 
-        title="Create bot"
+        title="Strategy"
         subtitle="Start by selecting a strategy to build your bot."
       />
       

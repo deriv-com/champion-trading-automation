@@ -18,7 +18,10 @@
       padding: 0;
       border: none;
       font-size: 20px;
-      color: var(--text-primary);
+
+      svg {
+        fill: var(--text-primary);
+      }
 
       &:hover {
         background: transparent;
@@ -34,6 +37,10 @@
       height: 36px;
       border: none;
       background-color: var(--hover-bg);
+
+      svg {
+        fill: var(--text-primary);
+      }
 
       .question-icon {
         font-size: 16px;
@@ -66,6 +73,10 @@
       font-size: 14px;
       color: var(--text-primary);
     }
+  }
+
+  input {
+    color: var(--text-primary) !important;
   }
 
   .parameters-title {
@@ -103,11 +114,15 @@
 
   .market-item {
     margin-bottom: 16px;
-    
+
+    svg {
+      fill: var(--text-primary);
+    }
+
     .market-icon-container {
       display: flex;
       align-items: center;
-      
+
       .market-icon-vol {
         background-color: rgba(var(--accent-color-rgb), 0.1);
         color: var(--accent-color);
@@ -116,7 +131,7 @@
         font-size: 12px;
         font-weight: 500;
       }
-      
+
       .market-icon-dot {
         width: 6px;
         height: 6px;
@@ -130,12 +145,6 @@
   .stake-item,
   .repeat-item {
     margin-bottom: 16px;
-
-    .repeat-input {
-      .input-field-control {
-        background-color: var(--bg-primary);
-      }
-    }
   }
 }
 
@@ -156,7 +165,7 @@
     border: none;
 
     &:hover {
-      background-color:  var(--accent-color);
+      background-color: var(--accent-color);
     }
   }
 }
@@ -169,7 +178,7 @@
 .market-selector-list {
   max-height: 300px;
   overflow-y: auto;
-  
+
   .market-selector-item {
     display: flex;
     align-items: center;
@@ -177,16 +186,16 @@
     cursor: pointer;
     border-radius: 8px;
     transition: background-color 0.3s;
-    
+
     &:hover {
       background-color: var(--hover-bg);
     }
-    
+
     .market-icon-container {
       display: flex;
       align-items: center;
       margin-right: 12px;
-      
+
       .market-icon-vol {
         background-color: rgba(var(--accent-color-rgb), 0.1);
         color: var(--accent-color);
@@ -195,7 +204,7 @@
         font-size: 12px;
         font-weight: 500;
       }
-      
+
       .market-icon-dot {
         width: 6px;
         height: 6px;

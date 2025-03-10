@@ -1,9 +1,4 @@
-import { 
-  AppstoreOutlined, 
-  RobotOutlined,
-  AreaChartOutlined,
-  MenuOutlined 
-} from '@ant-design/icons';
+import { LabelPairedPuzzleLgFillIcon, LegacyMenuHamburger1pxIcon, LegacyTimeIcon, StandalonePuzzlePieceTwoFillIcon } from '@deriv/quill-icons';
 import { Link } from 'react-router-dom';
 import { useNavigation } from '../../contexts/NavigationContext';
 import { ReactNode } from 'react';
@@ -17,6 +12,11 @@ interface NavItem {
   icon: ReactNode;
 }
 
+/**
+ * Navigation: Bottom navigation bar component with icons and labels.
+ * Inputs: None
+ * Output: JSX.Element - Navigation bar with links to different sections of the app
+ */
 export function Navigation() {
   const { activeTab } = useNavigation();
   
@@ -26,25 +26,25 @@ export function Navigation() {
       id: 'discover',
       path: '/discover',
       label: 'Discover',
-      icon: <AppstoreOutlined className="app-navigation__icon" />
+      icon: <LabelPairedPuzzleLgFillIcon  className="app-navigation__icon" />
     },
     {
       id: 'bots',
       path: '/bots',
       label: 'Bots',
-      icon: <RobotOutlined className="app-navigation__icon" />
+      icon: <StandalonePuzzlePieceTwoFillIcon className="app-navigation__icon bot-icon" />
     },
     {
       id: 'positions',
       path: '/positions',
       label: 'Positions',
-      icon: <AreaChartOutlined className="app-navigation__icon" />
+      icon: <LegacyTimeIcon className="app-navigation__icon" />
     },
     {
       id: 'menu',
       path: '/menu',
       label: 'Menu',
-      icon: <MenuOutlined className="app-navigation__icon" />
+      icon: <LegacyMenuHamburger1pxIcon className="app-navigation__icon" />
     }
   ];
 

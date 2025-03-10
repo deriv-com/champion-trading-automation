@@ -8,6 +8,11 @@ interface AccountHeaderProps {
   onDepositClick: () => void;
 }
 
+/**
+ * AccountHeader: Header component displaying account information and deposit button.
+ * Inputs: { accountType: 'Real', balance: string, currency: string, onDepositClick: () => void }
+ * Output: JSX.Element - Header with account info and deposit button
+ */
 export function AccountHeader({
   accountType,
   balance,
