@@ -1,7 +1,7 @@
 .app-sidebar {
   height: 100%;
-  border-right: 1px solid #f0f0f0;
-  background: #fff;
+  border-right: 1px solid var(--border-color);
+  background: var(--bg-primary);
 
   &__menu {
     border-right: none !important;
@@ -16,15 +16,15 @@
       }
 
       &-selected {
-        background-color: var(--primary-color) !important;
-        color: #fff !important;
+        background-color: var(--accent-color) !important;
+        color: var(--text-on-accent) !important;
 
         &:hover {
-          color: #fff !important;
+          color: var(--text-on-accent) !important;
         }
 
         .anticon {
-          color: #fff !important;
+          color: var(--text-on-accent) !important;
         }
       }
 
@@ -33,7 +33,7 @@
         cursor: not-allowed !important;
 
         &:hover {
-          color: rgba(0, 0, 0, 0.45) !important;
+          color: var(--text-secondary) !important;
         }
 
         .anticon {

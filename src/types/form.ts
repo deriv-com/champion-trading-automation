@@ -17,10 +17,11 @@ export interface FormConfig {
 
 // Form values type
 export interface StrategyFormProps {
-  config: FormConfig;
+  config?: FormConfig;
   strategyType: string;
   strategyId: string;
-  tradeType: string;
+  tradeType?: string;
+  onBack?: () => void;
 }
 
 // Base form values that all forms can extend

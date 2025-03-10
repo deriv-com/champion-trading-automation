@@ -6,6 +6,7 @@
   --text-primary: rgba(0, 0, 0, 0.85);
   --text-secondary: rgba(0, 0, 0, 0.45);
   --border-color: #e6e6e6;
+  --border-color-active: #1f1f1f;
   --accent-color: #00d0ff;
   --success-color: #52c41a;
   --warning-color: #faad14;
@@ -26,7 +27,7 @@
   --menu-item-selected: var(--accent-color);
   
   // Strategy cards
-  --card-bg: #ffffff;
+  --card-bg: #f8f9fa;
   --card-border: #f0f0f0;
   --card-hover-border: var(--accent-color);
   --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -40,361 +41,453 @@
 }
 
 [data-theme='dark'] {
-  // Base colors
-  --bg-primary: #262626;
-  --bg-secondary: #1f1f1f;
-  --bg-elevated: #303030;
+  // Base colors - using a more consistent dark theme
+  --bg-primary: #121212;
+  --bg-secondary: #1e1e1e;
+  --bg-elevated: #1a1a1a;
   --text-primary: rgba(255, 255, 255, 0.85);
   --text-secondary: rgba(255, 255, 255, 0.65);
-  --border-color: #434343;
+  --border-color: #333333;
+  --border-color-active: #555555;
   --accent-color: #00d0ff;
   --success-color: #52c41a;
   --warning-color: #faad14;
   --error-color: #ff4d4f;
   
   // Component specific
-  --hover-bg: #404040;
-  --drawer-bg: #1f1f1f;
-  --modal-bg: #1f1f1f;
-  --sidebar-bg: #262626;
-  --input-bg: #141414;
-  --input-border: #434343;
+  --hover-bg: #2c2c2c;
+  --drawer-bg: #1e1e1e;
+  --sidebar-bg: #1e1e1e;
+  --input-bg: #121212;
+  --input-border: #333333;
   --shadow-color: rgba(0, 0, 0, 0.3);
-  --dropdown-bg: #1f1f1f;
   
   // Navigation
-  --menu-bg: #262626;
-  --menu-item-hover: #404040;
-  --menu-item-active: #404040;
+  --menu-bg: #1e1e1e;
+  --menu-item-hover: #2c2c2c;
+  --menu-item-active: #2c2c2c;
   --menu-item-selected: var(--accent-color);
   
   // Strategy cards
-  --card-bg: #262626;
-  --card-border: #434343;
+  --card-bg: #1e1e1e;
+  --card-border: #333333;
   --card-hover-border: var(--accent-color);
   --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   --card-hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   
   // Filters
-  --filter-bg: #262626;
-  --filter-border: #434343;
-  --filter-hover: #404040;
+  --filter-bg: #1e1e1e;
+  --filter-border: #333333;
+  --filter-hover: #2c2c2c;
   --filter-active: var(--accent-color);
-  
-  // Additional styles for better visibility in dark mode
-  .ant-form {
-    background: var(--modal-bg);
-    color: var(--text-primary);
+}
 
-    .ant-row {
-      display: flex;
-      margin: 0 0 12px;
-      flex-wrap: wrap;
-      
-      @media (max-width: 768px) {
-        margin: 0;
-      }
-    }
-
-    .ant-col {
-      flex: 1;
-      padding: 0 12px;
-
-      &:first-child {
-        padding-left: 0;
-      }
-
-      &:last-child {
-        padding-right: 0;
-      }
-
-      @media (max-width: 768px) {
-        padding: 0;
-      }
-    }
-
-    .ant-form-item {
-      width: 100%;
-      margin-bottom: 0;
-      background: var(--modal-bg);
-      padding: 0;
-    }
+// Apply dark mode styles to Ant Design components
+[data-theme='dark'] {
+  // Ant Design component overrides
+  .ant-layout {
+    background-color: var(--bg-primary);
   }
-
-  // Modal content
-  .ant-modal-content {
-    padding: 0;
-    overflow: hidden;
-    border-radius: 8px;
-    background: var(--modal-bg);
+  
+  .ant-layout-header {
+    background-color: var(--bg-primary);
     border-color: var(--border-color);
-
-    .ant-modal-header {
-      padding: 16px 24px;
-      margin: 0;
-      background: var(--modal-bg);
-      border-color: var(--border-color);
-    }
-
-    .ant-modal-body {
-      padding: 24px;
-      background: var(--modal-bg);
-    }
-
-    .ant-modal-footer {
-      margin: 0;
-      padding: 16px 24px;
-      background: var(--modal-bg);
-      border-top-color: var(--border-color);
-    }
-  }
-
-  // Form field styles
-  .ant-form-item-label > label,
-  .ant-form-item-label > label.ant-form-item-required {
-    color: var(--text-primary) !important;
-  }
-
-  // Form labels with asterisk
-  .ant-form-item-required::after {
-    color: var(--text-primary) !important;
-  }
-
-  // Form labels with asterisk before
-  .ant-form-item-required::before {
-    color: #ff4d4f !important;
-  }
-
-  // Form item label colon
-  .ant-form-item-label > label::after {
-    color: var(--text-secondary) !important;
-  }
-
-  .ant-form-item-control-input-content {
-    background: var(--modal-bg);
-  }
-
-  .ant-modal-title,
-  .ant-modal-close {
-    color: var(--text-primary);
-  }
-
-  .ant-menu.ant-menu-dark {
-    background: var(--menu-bg);
-    
-    .ant-menu-item:hover {
-      background: var(--menu-item-hover);
-    }
-    
-    .ant-menu-item-selected {
-      background: var(--menu-item-active);
-      color: var(--menu-item-selected);
-    }
   }
   
-  .strategy-card {
-    background: var(--card-bg);
-    border-color: var(--card-border);
-    box-shadow: var(--card-shadow);
-    
-    &:hover {
-      border-color: var(--card-hover-border);
-      box-shadow: var(--card-hover-shadow);
-    }
+  .ant-layout-footer {
+    background-color: var(--bg-primary);
+    border-color: var(--border-color);
+  }
+  
+  .ant-layout-sider {
+    background-color: var(--sidebar-bg);
+  }
+  
+  // Card styles
+  .ant-card {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
     
     .ant-card-head {
-      border-color: var(--card-border);
-    }
-  }
-  
-  .ant-tag {
-    border-color: var(--filter-border);
-    background: var(--filter-bg);
-    
-    &:hover {
-      background: var(--filter-hover);
-    }
-    
-    &.ant-tag-checkable-checked {
-      background: var(--filter-active);
-    }
-  }
-  
-  // Ant Design specific overrides
-  .ant-card {
-    background: var(--drawer-bg);
-    border-color: var(--border-color);
-  }
-
-  .ant-layout {
-    background: var(--bg-primary);
-  }
-
-  .ant-layout-sider {
-    background: var(--sidebar-bg);
-  }
-
-  .ant-menu.ant-menu-dark {
-    background: var(--sidebar-bg);
-  }
-
-  .ant-table {
-    background: var(--drawer-bg);
-    color: var(--text-primary);
-  }
-
-  .ant-table-thead > tr > th {
-    background: var(--bg-secondary) !important;
-    color: var(--text-primary) !important;
-    border-color: var(--border-color) !important;
-  }
-
-  .ant-table-tbody > tr > td {
-    border-color: var(--border-color);
-  }
-
-  // Button styles
-  .ant-btn {
-    height: 40px;
-    padding: 6.4px 16px;
-    font-size: 16px;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-
-    &.ant-btn-primary {
-      background: var(--accent-color);
-      border-color: var(--accent-color);
-      color: #fff;
-
-      &:hover {
-        background: var(--accent-color);
-        border-color: var(--accent-color);
-        opacity: 0.8;
-        transform: translateY(-1px);
-      }
-
-      &:active {
-        transform: translateY(0);
-      }
-    }
-
-    &:not(.ant-btn-primary):not(.ant-btn-link):not(.ant-btn-text) {
-      background: var(--bg-secondary);
+      background-color: var(--bg-secondary);
       border-color: var(--border-color);
       color: var(--text-primary);
-
-      &:hover {
+    }
+    
+    .ant-card-body {
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+  }
+  
+  // Button styles
+  .ant-btn {
+    &.ant-btn-primary {
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+      color: #fff;
+      
+      &:hover, &:focus {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+        opacity: 0.85;
+      }
+    }
+    
+    &.ant-btn-default {
+      background-color: var(--bg-secondary);
+      border-color: var(--border-color);
+      color: var(--text-primary);
+      
+      &:hover, &:focus {
         border-color: var(--accent-color);
         color: var(--accent-color);
       }
     }
+    
+    &.ant-btn-text {
+      color: var(--text-primary);
+      
+      &:hover, &:focus {
+        background-color: var(--hover-bg);
+      }
+    }
+    
+    &.ant-btn-link {
+      color: var(--accent-color);
+    }
+    
+    &.ant-btn-dangerous {
+      color: var(--error-color);
+      border-color: var(--error-color);
+      
+      &.ant-btn-primary {
+        background-color: var(--error-color);
+        color: #fff;
+      }
+    }
   }
-
-  // Form inputs
+  
+  // Input styles
   .ant-input {
-    background-color: var(--input-bg) !important;
+    background-color: var(--input-bg);
     border-color: var(--border-color);
-    color: var(--text-primary) !important;
-
-    &:hover {
-      border-color: var(--accent-color);
-    }
-
-    &:focus {
-      border-color: var(--accent-color);
-      box-shadow: 0 0 0 2px rgba(255, 68, 79, 0.1);
+    color: var(--text-primary);
+    
+    &::placeholder {
+      color: var(--text-secondary);
     }
   }
-
-  // Input number styles
-  .ant-input-number {
-    background-color: var(--input-bg) !important;
+  
+  .ant-input-affix-wrapper {
+    background-color: var(--input-bg);
     border-color: var(--border-color);
-    color: var(--text-primary) !important;
-
-    .ant-input-number-input {
+    
+    .ant-input {
+      background-color: transparent;
+    }
+  }
+  
+  // Select styles
+  .ant-select {
+    .ant-select-selector {
       background-color: var(--input-bg);
+      border-color: var(--border-color);
       color: var(--text-primary);
     }
-
-    .ant-input-number-handler-wrap {
-      background-color: var(--bg-secondary);
+    
+    &:hover .ant-select-selector {
+      border-color: var(--accent-color);
+    }
+    
+    &.ant-select-focused .ant-select-selector {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 2px rgba(0, 208, 255, 0.2);
+    }
+    
+    .ant-select-arrow {
+      color: var(--text-secondary);
+    }
+  }
+  
+  .ant-select-dropdown {
+    background-color: var(--bg-secondary);
+    
+    .ant-select-item {
+      color: var(--text-primary);
+      
+      &-option-active {
+        background-color: var(--hover-bg);
+      }
+      
+      &-option-selected {
+        background-color: var(--hover-bg);
+        color: var(--accent-color);
+      }
+    }
+  }
+  
+  // Checkbox styles
+  .ant-checkbox-wrapper {
+    color: var(--text-primary);
+    
+    .ant-checkbox-inner {
+      background-color: var(--input-bg);
       border-color: var(--border-color);
     }
-
-    .ant-input-number-handler-up,
-    .ant-input-number-handler-down {
+    
+    .ant-checkbox-checked .ant-checkbox-inner {
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+    }
+  }
+  
+  // Radio styles
+  .ant-radio-wrapper {
+    color: var(--text-primary);
+    
+    .ant-radio-inner {
+      background-color: var(--input-bg);
       border-color: var(--border-color);
+    }
+    
+    .ant-radio-checked .ant-radio-inner {
+      border-color: var(--accent-color);
       
-      &:hover {
-        border-color: var(--accent-color);
-        height: 50%;
+      &::after {
+        background-color: var(--accent-color);
+      }
+    }
+  }
+  
+  // Switch styles
+  .ant-switch {
+    background-color: rgba(255, 255, 255, 0.25);
+    
+    &-checked {
+      background-color: var(--accent-color);
+    }
+    
+    &-handle {
+      &::before {
+        background-color: #fff;
+      }
+    }
+  }
+  
+  // Table styles
+  .ant-table {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    
+    .ant-table-thead > tr > th {
+      background-color: var(--bg-elevated);
+      color: var(--text-primary);
+      border-color: var(--border-color);
+    }
+    
+    .ant-table-tbody > tr > td {
+      border-color: var(--border-color);
+    }
+    
+    .ant-table-tbody > tr:hover > td {
+      background-color: var(--hover-bg);
+    }
+  }
+  
+  // Modal styles
+  .ant-modal {
+    .ant-modal-content {
+      background-color: var(--bg-secondary);
+      
+      .ant-modal-header {
+        background-color: var(--bg-secondary);
+        border-color: var(--border-color);
         
-        .ant-input-number-handler-up-inner,
-        .ant-input-number-handler-down-inner {
-          color: var(--accent-color);
+        .ant-modal-title {
+          color: var(--text-primary);
+        }
+      }
+      
+      .ant-modal-body {
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+      }
+      
+      .ant-modal-footer {
+        background-color: var(--bg-secondary);
+        border-color: var(--border-color);
+      }
+      
+      .ant-modal-close {
+        color: var(--text-secondary);
+        
+        &:hover {
+          color: var(--text-primary);
         }
       }
     }
-
-    &:hover {
-      border-color: var(--accent-color);
-    }
-
-    &:focus,
-    &-focused {
-      border-color: var(--accent-color);
-      box-shadow: 0 0 0 2px rgba(255, 68, 79, 0.1);
+  }
+  
+  // Drawer styles
+  .ant-drawer {
+    .ant-drawer-content {
+      background-color: var(--bg-secondary);
+      
+      .ant-drawer-header {
+        background-color: var(--bg-secondary);
+        border-color: var(--border-color);
+        
+        .ant-drawer-title {
+          color: var(--text-primary);
+        }
+      }
+      
+      .ant-drawer-body {
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+      }
+      
+      .ant-drawer-footer {
+        border-color: var(--border-color);
+      }
+      
+      .ant-drawer-close {
+        color: var(--text-secondary);
+        
+        &:hover {
+          color: var(--text-primary);
+        }
+      }
     }
   }
-
-  // Close button
-  .ant-modal-close {
-    color: var(--text-secondary);
-    
-    &:hover {
+  
+  // Divider
+  .ant-divider {
+    border-color: var(--border-color);
+  }
+  
+  // Form
+  .ant-form {
+    .ant-form-item-label > label {
       color: var(--text-primary);
     }
+    
+    .ant-form-item-explain, 
+    .ant-form-item-extra {
+      color: var(--text-secondary);
+    }
   }
-
-  // Modal title
-  .ant-modal-title {
+  
+  // Menu
+  .ant-menu {
+    background-color: var(--menu-bg);
     color: var(--text-primary);
-  }
-
-  // Form footer
-  .ant-form > .ant-form-item:last-child {
-    margin-bottom: 0;
-    background: var(--bg-secondary);
-    border-top: 1px solid var(--border-color);
-  }
-
-  // Drawer footer
-  .ant-drawer-footer {
-    background: var(--bg-secondary);
-    border-top: 1px solid var(--border-color);
-  }
-
-  .ant-form-item-explain,
-  .ant-form-item-extra {
-    color: var(--text-secondary);
-  }
-
-  .ant-input-affix-wrapper {
-    background: var(--input-bg);
     border-color: var(--border-color);
     
-    &:hover,
-    &:focus {
+    .ant-menu-item {
+      color: var(--text-primary);
+      
+      &:hover {
+        color: var(--accent-color);
+      }
+      
+      &-selected {
+        color: var(--accent-color);
+        background-color: var(--menu-item-active);
+      }
+    }
+  }
+  
+  // Custom component styles
+  .strategy-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    
+    &__title {
+      color: var(--text-primary);
+    }
+    
+    &__description {
+      color: var(--text-secondary);
+    }
+    
+    &__icon, &__arrow {
+      color: var(--text-secondary);
+    }
+    
+    &:hover {
       border-color: var(--accent-color);
     }
-
-    .ant-input {
-      background: var(--input-bg);
+  }
+  
+  .page-title {
+    background-color: var(--bg-primary);
+    
+    &__heading {
+      color: var(--text-primary);
+    }
+    
+    &__subtitle {
+      color: var(--text-secondary);
+    }
+  }
+  
+  .app-navigation {
+    background-color: var(--bg-primary);
+    border-color: var(--border-color);
+    
+    &__item {
+      color: var(--text-secondary);
+      
+      &--active {
+        color: var(--accent-color);
+      }
+    }
+  }
+  
+  .account-header {
+    background-color: var(--bg-primary);
+    border-color: var(--border-color);
+    
+    &__type {
+      color: var(--accent-color);
+    }
+    
+    &__balance {
+      color: var(--text-primary);
+    }
+    
+    &__deposit-btn {
+      background-color: var(--accent-color);
+      color: var(--text-primary);
+            
+      &:hover {
+        opacity: 0.85;
+      }
+    }
+  }
+  
+  .settings {
+    &__title {
+      color: var(--text-primary);
+    }
+    
+    &__section-title {
+      color: var(--text-secondary);
+    }
+    
+    &__info-grid {
+      background-color: var(--bg-secondary);
+    }
+    
+    &__theme-switch {
+      background-color: var(--bg-secondary);
+    }
+    
+    &__theme-label {
+      color: var(--text-primary);
     }
   }
 }

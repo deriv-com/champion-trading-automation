@@ -1,0 +1,62 @@
+.bottom-action-sheet {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  overflow: hidden;
+
+  .ant-drawer-body {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bottom-action-sheet-handle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 0;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    .bottom-action-sheet-handle-bar {
+      width: 80px;
+      height: 4px;
+      background-color: var(--border-color);
+      border-radius: 4px;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: var(--border-color-active);
+      }
+    }
+    
+    &:active .bottom-action-sheet-handle-bar {
+      background-color: var(--text-secondary);
+      transform: scale(1.05);
+      transition: background-color 0.1s, transform 0.1s;
+    }
+  }
+
+  .bottom-action-sheet-content {
+    flex: 1;
+    padding: 0 0 16px;
+    overflow-y: auto;
+    transition: transform 0.2s;
+  }
+
+  .bottom-action-sheet-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    button {
+      min-width: 120px;
+    }
+  }
+}

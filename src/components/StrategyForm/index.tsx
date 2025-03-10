@@ -1,52 +1,60 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Form, Input, InputNumber, Button, Select } from "antd";
-import type { Rule } from "antd/es/form";
+import { Form, Button, Segmented } from "antd";
+import { BottomActionSheet } from "../BottomActionSheet";
+import { DownOutlined } from "@ant-design/icons";
+import { InputField } from "../InputField";
 import {
-  InfoCircleOutlined,
-  MinusOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
-import { useState, useEffect } from "react";
-import { useProcessingStack } from "../../contexts/ProcessingStackContext";
+  LabelPairedArrowLeftMdBoldIcon,
+  LabelPairedCircleQuestionMdBoldIcon,
+  MarketDerivedVolatility1001sIcon,
+} from "@deriv/quill-icons";
+import { useState } from "react";
 import { TradeErrorBoundary } from "../ErrorBoundary/TradeErrorBoundary";
-import { TradeStatusEnum, TradeStrategy } from "../../types/trade";
+import { TradeStrategy } from "../../types/trade";
 import { useTrade } from "../../contexts/TradeContext";
+import { MarketInfo } from "../../types/market";
+import MarketSelector from "../MarketSelector";
 import "./styles.scss";
 
-import {
-  FieldConfig,
-  FormValues,
-  StrategyFormProps,
-  PrefixType,
-} from "../../types/form";
+import { FormValues, StrategyFormProps } from "../../types/form";
 
 export function StrategyForm({
-  config,
   strategyType,
   strategyId,
-  tradeType,
+  onBack,
 }: StrategyFormProps) {
   const [form] = Form.useForm<FormValues>();
-  const { addProcess } = useProcessingStack();
-  const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const { submitTrade, isSubmitting: isTradeSubmitting } = useTrade();
-
-  useEffect(() => {
-    setIsSubmitting(isTradeSubmitting);
-  }, [isTradeSubmitting]);
+  const [showMarketSelector, setShowMarketSelector] = useState(false);
+  const [selectedMarket, setSelectedMarket] = useState<MarketInfo>();
+  const { submitTrade } = useTrade();
 
   const handleSubmit = async (values: FormValues) => {
+    // for now some values here are static 
+    // once we have the api we will make this function dynamic based on the api schema
+    const newBot = {
+      id: Date.now().toString(),
+      name: values.botName || "New Strategy Bot",
+      market: values.market,
+      tradeType: values.tradeType,
+      strategy: "Custom",
+      params: [
+        { key: "repeat_trade", label: "Repeat trade", value: values.repeatTrade },
+        { key: "initial_stake", label: "Initial stake", value: values.initialStake },
+      ],
+    };
+
+    const storedBots = JSON.parse(localStorage.getItem("bots") || "[]");
+    const updatedBots = [...storedBots, newBot];
+    localStorage.setItem("bots", JSON.stringify(updatedBots));
     try {
-      setIsRunning(true);
+      setIsSubmitting(true);
 
       // Submit trade through trade context
       const sessionId = await submitTrade(values, strategyId as TradeStrategy);
 
-      console.log("Trade submitted with session ID:", sessionId);
+      console.log("Bot created with session ID:", sessionId);
 
-      // Add to processing stack
+      /* Add to processing stack
       addProcess({
         sessionId,
         symbol: values.asset as string,
@@ -69,152 +77,133 @@ export function StrategyForm({
 
       // Call the provided onSubmit handler if needed
       // await onSubmit?.(values);
-
+      */
+      // Handle successful submission (e.g., redirect or show success message)
     } catch (error) {
-      console.error("Failed to start trading session:", error);
-      setIsRunning(false);
+      console.error("Failed to create bot:", error);
+    } finally {
+      setIsSubmitting(false);
     }
-  };
-
-  const handleIncrement = (field: string) => {
-    const currentValue = (form.getFieldValue(field) as number) || 0;
-    form.setFieldValue(field, currentValue + 1);
-  };
-
-  const handleDecrement = (field: string) => {
-    const currentValue = (form.getFieldValue(field) as number) || 0;
-    if (currentValue > 0) {
-      form.setFieldValue(field, currentValue - 1);
-    }
-  };
-
-  const renderField = (field: FieldConfig) => {
-    const { name, label, type, options, prefixType } = field;
-
-    const isNumberField = type === "number" || type === "number-prefix";
-
-    const numberRules: Rule[] = [
-      { required: true, message: `Please enter ${label.toLowerCase()}` },
-      { type: "number", min: 0, message: "Must be a positive number" },
-    ];
-
-    const textRules: Rule[] = [
-      { required: true, message: `Please enter ${label.toLowerCase()}` },
-    ];
-
-    const getPrefix = (prefixType?: PrefixType) => {
-      switch (prefixType) {
-        case "currency":
-          return "USD";
-        case "percentage":
-          return "%";
-        default:
-          return "";
-      }
-    };
-
-    return (
-      <div className="form-section">
-        <div className="section-title">
-          <span className="title">{label}</span>
-          <InfoCircleOutlined className="info-icon" />
-        </div>
-        {type === "select" ? (
-          <div className="select-container">
-            <Form.Item name={name} noStyle rules={textRules}>
-              <Select
-                showSearch
-                placeholder={`Select ${label.toLowerCase()}`}
-                optionFilterProp="label"
-                options={options}
-                getPopupContainer={(trigger) =>
-                  trigger.parentNode as HTMLElement
-                }
-              />
-            </Form.Item>
-          </div>
-        ) : (
-          <div className="input-field">
-            {isNumberField && (
-              <button
-                type="button"
-                className="minus-btn"
-                onClick={() => handleDecrement(name)}
-              >
-                <MinusOutlined />
-              </button>
-            )}
-            {type === "number-prefix" && prefixType && (
-              <span className="currency">{getPrefix(prefixType)}</span>
-            )}
-            <Form.Item
-              name={name}
-              noStyle
-              rules={isNumberField ? numberRules : textRules}
-            >
-              {isNumberField ? (
-                <InputNumber style={{ width: "100%" }} min={0} precision={2} />
-              ) : (
-                <Input />
-              )}
-            </Form.Item>
-            {isNumberField && (
-              <button
-                type="button"
-                className="plus-btn"
-                onClick={() => handleIncrement(name)}
-              >
-                <PlusOutlined />
-              </button>
-            )}
-          </div>
-        )}
-      </div>
-    );
   };
 
   const handleReset = () => {
     form.resetFields();
-    setIsRunning(false);
-    setIsSubmitting(false);
   };
+
 
   return (
     <TradeErrorBoundary onReset={handleReset}>
       <div className="strategy-form-container">
+        <div className="strategy-form-header">
+          <div className="header-left">
+            <Button
+              type="text"
+              icon={<LabelPairedArrowLeftMdBoldIcon />}
+              className="back-button"
+              onClick={onBack}
+            />
+          </div>
+          <div className="header-right">
+            <Button
+              type="text"
+              shape="circle"
+              icon={<LabelPairedCircleQuestionMdBoldIcon />}
+              className="help-button"
+            />
+          </div>
+        </div>
+
+        <h1 className="strategy-title">{strategyType} strategy</h1>
+
         <Form
           form={form}
           onFinish={handleSubmit}
           layout="vertical"
           className="strategy-form"
+          initialValues={{
+            tradeType: "Rise",
+            market: "Volatility 100 (1s) Index",
+            initialStake: 10,
+            repeatTrade: 2,
+          }}
         >
-          <div className="section-header">
-            <span className="label">Trade type</span>
-            <span className="value">{tradeType}</span>
-          </div>
+          <Form.Item name="botName">
+            <InputField
+              label="Bot name"
+              type="text"
+              className="bot-name-input"
+              defaultValue={'Test-01'}
+            />
+          </Form.Item>
 
-          <div className="section-header">
-            <span className="label">Strategy</span>
-            <span className="value">{strategyType}</span>
-          </div>
+          <h2 className="parameters-title">Parameters</h2>
 
-          {config.fields.map((field, index) => (
-            <div key={index}>{renderField(field)}</div>
-          ))}
+          <Form.Item name="tradeType" className="trade-type-item">
+            <Segmented
+              block
+              options={[
+                { label: "Rise", value: "Rise" },
+                { label: "Fall", value: "Fall" },
+              ]}
+            />
+          </Form.Item>
+
+          <Form.Item name="market" className="market-item">
+                <InputField 
+                  type="selectable" 
+                  value={"Volatility 100 (1s) Index"}
+                  prefix={<MarketDerivedVolatility1001sIcon fill='#000000' iconSize='sm' />}
+                  suffix={<DownOutlined />}
+                  onClick={() => setShowMarketSelector(true)}
+                />
+          </Form.Item>
+
+          <Form.Item name="initialStake" className="stake-item">
+            <InputField
+              label="Initial stake"
+              type="number-prefix"
+              suffix="USD"
+            />
+          </Form.Item>
+
+          <Form.Item name="repeatTrade" className="repeat-item">
+            <InputField
+              label="Repeat trade"
+              type="number"
+              className="repeat-input"
+            />
+          </Form.Item>
         </Form>
 
         <div className="form-footer">
-          <Button className="load-button">Save</Button>
           <Button
-            className="run-button"
+            type="primary"
+            block
+            className="create-button"
             onClick={() => form.submit()}
-            disabled={isRunning || isSubmitting}
             loading={isSubmitting}
           >
-            {isSubmitting ? "Starting..." : "Run"}
+            Create bot
           </Button>
         </div>
       </div>
+
+      {/* Market Selector */}
+      <BottomActionSheet
+        isOpen={showMarketSelector}
+        onClose={() => setShowMarketSelector(false)}
+        className="market-selector-drawer"
+        height="80vh"
+      >
+        <MarketSelector
+          onSelectMarket={(market) => {
+            setSelectedMarket(market);
+            form.setFieldsValue({ market: market.displayName });
+            setShowMarketSelector(false);
+          }}
+          selectedMarket={selectedMarket}
+        />
+      </BottomActionSheet>
     </TradeErrorBoundary>
   );
 }

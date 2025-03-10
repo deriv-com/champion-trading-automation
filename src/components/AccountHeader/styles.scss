@@ -1,0 +1,66 @@
+.account-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 16px;
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+  width: 100%;
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__type {
+    color: var(--accent-color);
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    gap:0;
+    
+    .anticon {
+      font-size: 12px;
+      margin-left: 5px;
+    }
+  }
+
+  &__balance {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  &__deposit-btn {
+    border-radius: 20px;
+    padding: 8px 16px;
+    height: auto;
+    font-size: 14px;
+    font-weight: 500;
+    background-color: var(--accent-color);
+    
+    &:hover {
+      border: none;
+      color: var(--accent-color);
+    }
+  }
+
+  @media (min-width: 768px) {
+    padding: 16px 20px;
+    
+    &__balance {
+      font-size: 24px;
+    }
+    
+    &__deposit-btn {
+      padding: 6px 20px;
+      font-size: 16px;
+    }
+  }
+}

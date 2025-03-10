@@ -34,12 +34,12 @@
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background-color: #00d0ff;
+        background-color: var(--accent-color);
         transition: background-color 0.3s ease;
       }
       
       &[data-connected='true']::before {
-        background-color: #4bb543;
+        background-color: var(--success-color);
       }
     }
 
@@ -49,11 +49,11 @@
     }
 
     &.error {
-      border: 1px solid #00d0ff;
+      border: 1px solid var(--accent-color);
       
       .error-message {
         margin-top: 8px;
-        color: #00d0ff;
+        color: var(--accent-color);
         font-size: 12px;
       }
     }

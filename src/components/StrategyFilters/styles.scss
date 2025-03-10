@@ -36,27 +36,27 @@
     padding: 0 20px !important;
     border-radius: 100px !important;
     font-size: 14px !important;
-    background: #F9FAFB !important;
-    border: 1px solid #E5E7EB !important;
-    color: #374151 !important;
+    background: var(--hover-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
     transition: all 0.2s ease !important;
     
     .anticon {
       margin-right: 8px;
       font-size: 14px;
-      color: #374151;
+      color: var(--text-primary);
     }
 
     &:hover {
-      border-color: #00d0ff !important;
-      color: #00d0ff !important;
+      border-color: var(--accent-color) !important;
+      color: var(--accent-color) !important;
     }
   }
 
   @media (max-width: 768px) {
     padding: 12px;
     top: 56px;
-    border-bottom: 1px solid #E5E7EB;
+    border-bottom: 1px solid var(--border-color);
 
     &__container {
       padding: 0;
@@ -87,24 +87,24 @@
     border-radius: 100px !important;
     font-size: 14px !important;
     font-weight: 400 !important;
-    color: #374151 !important;
-    background: #F9FAFB !important;
-    border: 1px solid #E5E7EB !important;
+    color: var(--text-primary) !important;
+    background: var(--hover-bg) !important;
+    border: 1px solid var(--border-color) !important;
     box-shadow: none !important;
     white-space: nowrap;
     flex-shrink: 0;
     transition: all 0.2s ease !important;
     
     &:hover {
-      color: #00d0ff !important;
-      border-color: #00d0ff !important;
-      background: #F9FAFB !important;
+      color: var(--accent-color) !important;
+      border-color: var(--accent-color) !important;
+      background: var(--hover-bg) !important;
     }
     
     &.ant-btn-primary {
-      color: #fff !important;
-      background: #00d0ff !important;
-      border-color: #00d0ff !important;
+      color: var(--text-on-accent) !important;
+      background: var(--accent-color) !important;
+      border-color: var(--accent-color) !important;
 
       &:hover {
         opacity: 0.9 !important;
@@ -116,8 +116,8 @@
     width: 300px;
     flex-shrink: 0;
     border-radius: 100px !important;
-    border: 1px solid #E5E7EB !important;
-    background: #F9FAFB !important;
+    border: 1px solid var(--border-color) !important;
+    background: var(--hover-bg) !important;
     transition: all 0.2s ease !important;
     height: 40px !important;
 
@@ -125,16 +125,16 @@
       font-size: 14px !important;
       height: 30px !important;
       background: transparent !important;
-      color: #374151 !important;
+      color: var(--text-primary) !important;
       padding-left: 40px !important;
 
       &::placeholder {
-        color: #9CA3AF;
+        color: var(--text-secondary);
       }
     }
 
     .ant-input-prefix {
-      color: #9CA3AF;
+      color: var(--text-secondary);
       font-size: 16px;
       margin: 0 !important;
       width: 40px;
@@ -145,21 +145,21 @@
     }
 
     .ant-input-clear-icon {
-      color: #9CA3AF;
+      color: var(--text-secondary);
       transition: all 0.2s ease;
       margin-right: 4px;
 
       &:hover {
-        color: #00d0ff;
+        color: var(--accent-color);
       }
     }
 
     &:hover {
-      border-color: #00d0ff !important;
+      border-color: var(--accent-color) !important;
     }
 
     &:focus-within {
-      border-color: #00d0ff !important;
+      border-color: var(--accent-color) !important;
       box-shadow: none !important;
     }
 
@@ -174,28 +174,28 @@
       padding: 0 !important;
       border-radius: 12px !important;
       overflow: hidden;
-      background: #fff !important;
+      background: var(--bg-primary) !important;
     }
 
     .ant-modal-header {
       margin: 0 !important;
       padding: 20px 24px !important;
-      border-bottom: 1px solid #E5E7EB;
-      background: #fff !important;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-primary) !important;
 
       .ant-modal-title {
-        color: #111827 !important;
+        color: var(--text-primary) !important;
         font-size: 18px !important;
         font-weight: 600 !important;
       }
     }
 
     .ant-modal-close {
-      color: #9CA3AF !important;
+      color: var(--text-secondary) !important;
       transition: all 0.2s ease;
 
       &:hover {
-        color: #00d0ff !important;
+        color: var(--accent-color) !important;
       }
     }
 
@@ -225,95 +225,13 @@
     }
 
     &:not(.ant-btn-primary) {
-      color: #374151 !important;
+      color: var(--text-primary) !important;
       border-color: transparent !important;
       background: transparent !important;
 
       &:hover {
-        color: #00d0ff !important;
-        background: rgba(255, 68, 79, 0.05) !important;
-      }
-    }
-  }
-}
-
-// Dark mode specific overrides
-[data-theme='dark'] {
-  .strategy-filters {
-    &__button {
-      background: #1F2937 !important;
-      border-color: #374151 !important;
-      color: #D1D5DB !important;
-
-      &:hover {
-        border-color: #00d0ff !important;
-        color: #00d0ff !important;
-      }
-
-      &.ant-btn-primary {
-        background: #00d0ff !important;
-        border-color: #00d0ff !important;
-        color: #fff !important;
-      }
-    }
-
-    &__search {
-      background: #1F2937 !important;
-      border-color: #374151 !important;
-
-      .ant-input {
-        color: #D1D5DB !important;
-
-        &::placeholder {
-          color: #6B7280;
-        }
-      }
-
-      &:hover {
-        border-color: #00d0ff !important;
-      }
-
-      &:focus-within {
-        border-color: #00d0ff !important;
-      }
-    }
-
-    &__mobile-button {
-      background: #1F2937 !important;
-      border-color: #374151 !important;
-      color: #D1D5DB !important;
-
-      .anticon {
-        color: #D1D5DB;
-      }
-    }
-
-    &__modal {
-      .ant-modal-content {
-        background: #1F2937 !important;
-      }
-
-      .ant-modal-header {
-        background: #1F2937 !important;
-        border-color: #374151;
-
-        .ant-modal-title {
-          color: #D1D5DB !important;
-        }
-      }
-
-      .ant-modal-close {
-        color: #6B7280 !important;
-      }
-    }
-
-    &__modal-button {
-      &:not(.ant-btn-primary) {
-        color: #D1D5DB !important;
-
-        &:hover {
-          background: rgba(255, 68, 79, 0.1) !important;
-        }
+        color: var(--accent-color) !important;
+        background: rgba(var(--accent-color-rgb), 0.05) !important;
       }
     }
   }

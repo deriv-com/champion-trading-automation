@@ -1,21 +1,38 @@
 import { WebSocketResponse, WebSocketRequest } from '../../types/websocket';
+import { configService } from '../config/configService';
 
 type MessageHandler = (data: WebSocketResponse) => void;
 
+/**
+ * WebSocketService: Service for managing WebSocket connections to the trading API.
+ * Implements singleton pattern and handles connection lifecycle, message processing, and keep-alive pings.
+ * Methods: connect, disconnect, send, isConnected
+ */
 class WebSocketService {
   private static instance: WebSocketService;
   private ws: WebSocket | null = null;
   private messageHandler: MessageHandler | null = null;
   private pingInterval: number | null = null;
-  private wsUrl: string;
   private isConnecting = false;
 
-  private constructor() {
-    const baseUrl = import.meta.env.VITE_WS_URL;
-    const appId = import.meta.env.VITE_OAUTH_APP_ID;
-    this.wsUrl = `${baseUrl}?app_id=${appId}&l=en&brand=deriv`;
+  private constructor() {}
+  
+  /**
+   * getWsUrl: Constructs the WebSocket URL with authentication parameters.
+   * Inputs: None
+   * Output: string - Complete WebSocket URL with authentication parameters
+   */
+  private getWsUrl(): string {
+    const wsUrl = configService.getValue('wsUrl');
+    const appId = configService.getValue('oauthAppId');
+    return `${wsUrl}?app_id=${appId}&l=en&brand=deriv`;
   }
 
+  /**
+   * getInstance: Returns the singleton instance of WebSocketService.
+   * Inputs: None
+   * Output: WebSocketService - Singleton instance of the service
+   */
   public static getInstance(): WebSocketService {
     if (!WebSocketService.instance) {
       WebSocketService.instance = new WebSocketService();
@@ -23,16 +40,25 @@ class WebSocketService {
     return WebSocketService.instance;
   }
 
+  /**
+   * startPingInterval: Starts a periodic ping to keep the WebSocket connection alive.
+   * Inputs: None
+   * Output: void - Sets up an interval that sends ping messages every 10 seconds
+   */
   private startPingInterval(): void {
     this.clearPingInterval();
     this.pingInterval = window.setInterval(() => {
       if (this.isConnected()) {
-        console.log('Sending ping...');
         this.send({ ping: 1 });
       }
     }, 10000);
   }
 
+  /**
+   * clearPingInterval: Clears the ping interval timer.
+   * Inputs: None
+   * Output: void - Stops the ping interval if it exists
+   */
   private clearPingInterval(): void {
     if (this.pingInterval) {
       clearInterval(this.pingInterval);
@@ -40,6 +66,11 @@ class WebSocketService {
     }
   }
 
+  /**
+   * connect: Establishes a WebSocket connection and sets up event handlers.
+   * Inputs: onMessage: MessageHandler - Callback function to handle incoming messages
+   * Output: void - Creates and configures WebSocket connection with event handlers
+   */
   public connect(onMessage: MessageHandler): void {
     // If already connected or connecting, just update the message handler
     if (this.isConnecting || this.ws?.readyState === WebSocket.OPEN) {
@@ -57,7 +88,7 @@ class WebSocketService {
       this.ws = null;
     }
 
-    this.ws = new WebSocket(this.wsUrl);
+    this.ws = new WebSocket(this.getWsUrl());
 
     this.ws.onopen = () => {
       console.log('WebSocket connected');
@@ -90,6 +121,11 @@ class WebSocketService {
     };
   }
 
+  /**
+   * disconnect: Closes the WebSocket connection and cleans up resources.
+   * Inputs: None
+   * Output: void - Closes connection, stops ping interval, and resets state
+   */
   public disconnect(): void {
     this.clearPingInterval();
     if (this.ws) {
@@ -100,6 +136,11 @@ class WebSocketService {
     this.isConnecting = false;
   }
 
+  /**
+   * send: Sends a message to the WebSocket server.
+   * Inputs: payload: WebSocketRequest - The data to send to the server
+   * Output: void - Sends serialized message with request ID if connection is open
+   */
   public send(payload: WebSocketRequest): void {
     if (this.ws?.readyState === WebSocket.OPEN) {
       const message = {
@@ -112,6 +153,11 @@ class WebSocketService {
     }
   }
 
+  /**
+   * isConnected: Checks if the WebSocket connection is currently open.
+   * Inputs: None
+   * Output: boolean - True if the connection is open and ready for communication
+   */
   public isConnected(): boolean {
     return this.ws?.readyState === WebSocket.OPEN;
   }

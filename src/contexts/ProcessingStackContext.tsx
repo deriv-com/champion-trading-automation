@@ -8,6 +8,11 @@ interface ProcessingStackContextType {
 
 const ProcessingStackContext = createContext<ProcessingStackContextType | undefined>(undefined);
 
+/**
+ * ProcessingStackProvider: Provides process management for trading operations.
+ * Inputs: { children: ReactNode } - Child components to be wrapped with the context
+ * Output: JSX.Element - Context provider with processes state and ProcessingStack component
+ */
 export function ProcessingStackProvider({ children }: { children: ReactNode }) {
   const [processes, setProcesses] = useState<ProcessInfo[]>([]);
 
@@ -20,10 +25,15 @@ export function ProcessingStackProvider({ children }: { children: ReactNode }) {
 
     return () => clearInterval(interval);
   }, []);
-
-  const addProcess = (process: Omit<ProcessInfo, 'id' | 'timestamp'>) => {
-    const id = Math.random().toString(36).substr(2, 9);
-    const timestamp = Date.now();
+/**
+ * addProcess: Adds a new process to the stack and simulates its progress over time.
+ * Inputs: process: Omit<ProcessInfo, 'id' | 'timestamp'> - Process data without ID and timestamp
+ * Output: void - Updates processes state and sets up simulation interval
+ */
+const addProcess = (process: Omit<ProcessInfo, 'id' | 'timestamp'>) => {
+  const id = Math.random().toString(36).substr(2, 9);
+  const timestamp = Date.now();
+  
     
     const newProcess: ProcessInfo = {
       ...process,
@@ -63,6 +73,12 @@ export function ProcessingStackProvider({ children }: { children: ReactNode }) {
   );
 }
 
+/**
+ * useProcessingStack: Hook to access the processing stack context values and methods.
+ * Inputs: None
+ * Output: ProcessingStackContextType - Object with processes array and addProcess function
+ * Throws: Error if used outside of ProcessingStackProvider
+ */
 export function useProcessingStack() {
   const context = useContext(ProcessingStackContext);
   if (!context) {

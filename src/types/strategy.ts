@@ -22,9 +22,9 @@ export interface Strategy {
   id: string;
   title: string;
   description: string;
-  risk: "low" | "medium" | "high";
-  profit: "limited" | "unlimited";
-  category:
+  risk?: "low" | "medium" | "high";
+  profit?: "limited" | "unlimited";
+  category?:
     | "all"
     | "long-calls"
     | "short-puts"
