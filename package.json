@@ -1,0 +1,41 @@
+{
+  "name": "champion-automation",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "setup-hooks": "node scripts/setup-hooks.js",
+    "test:pre-commit": "node scripts/test-pre-commit.js",
+    "test:build-error": "node scripts/test-build-error.js",
+    "test:build-error:restore": "node scripts/test-build-error.js --restore"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^5.6.1",
+    "@deriv/quill-icons": "^2.4.4",
+    "antd": "^5.24.0",
+    "axios": "^1.7.9",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.2.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "@types/node": "^22.13.1",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.19.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.18",
+    "globals": "^15.14.0",
+    "sass": "^1.84.0",
+    "terser": "^5.39.0",
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.22.0",
+    "vite": "^6.1.0"
+  }
+}

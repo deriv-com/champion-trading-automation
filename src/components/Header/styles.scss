@@ -1,0 +1,138 @@
+@use "sass:color";
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: var(--bg-primary);
+  box-shadow: 0 0 5px var(--shadow-color);
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid var(--border-color);
+
+  &__logo-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__account-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__account-type {
+    color: var(--accent-color);
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    
+    .anticon {
+      font-size: 12px;
+      margin-left: 5px;
+    }
+  }
+
+  &__account-balance {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  &__deposit-btn {
+    border-radius: 20px;
+    padding: 8px 16px;
+    height: auto;
+    font-size: 14px;
+    font-weight: 500;
+    background-color: var(--accent-color);
+    color: var(--text-primary);
+
+    &:hover {
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+  }
+
+  @media (max-width: 576px) {
+    padding: 0 16px;
+    height: 56px;
+
+    &__logo-section {
+      gap: 8px;
+    }
+
+    &__logo {
+      width: 28px;
+      height: 28px;
+    }
+
+    &__title {
+      font-size: 18px;
+    }
+
+    &__auth-button {
+      padding: 4px 12px;
+      height: 32px;
+      font-size: 14px;
+    }
+
+    &__account-balance {
+      font-size: 14px;
+    }
+    
+    &__deposit-btn {
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    &__account-balance {
+      font-size: 18px;
+    }
+    
+    &__deposit-btn {
+      padding: 6px 20px;
+      font-size: 16px;
+    }
+  }
+
+  &__logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  &__title {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  &__theme-button {
+    &.ant-btn {
+      color: var(--text-secondary);
+      
+      &:hover {
+        color: var(--accent-color);
+        background: var(--hover-bg);
+      }
+    }
+  }
+
+  &__auth-button {
+    &.ant-btn-primary {
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+
+      &:hover {
+        filter: brightness(0.9);
+        transition: filter 0.3s ease;
+      }
+    }
+  }
+}

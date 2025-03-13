@@ -1,0 +1,493 @@
+:root {
+  // Light theme (default)
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-elevated: #ffffff;
+  --text-primary: rgba(0, 0, 0, 0.85);
+  --text-secondary: rgba(0, 0, 0, 0.45);
+  --border-color: #e6e6e6;
+  --border-color-active: #1f1f1f;
+  --accent-color: #00d0ff;
+  --success-color: #52c41a;
+  --warning-color: #faad14;
+  --error-color: #ff4d4f;
+  
+  // Component specific
+  --hover-bg: #f5f5f5;
+  --drawer-bg: #ffffff;
+  --sidebar-bg: #ffffff;
+  --input-bg: #ffffff;
+  --input-border: #e6e6e6;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  
+  // Navigation
+  --menu-bg: #ffffff;
+  --menu-item-hover: #f5f5f5;
+  --menu-item-active: #fff0f0;
+  --menu-item-selected: var(--accent-color);
+  
+  // Strategy cards
+  --card-bg: #f8f9fa;
+  --card-border: #f0f0f0;
+  --card-hover-border: var(--accent-color);
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --card-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  
+  // Filters
+  --filter-bg: #ffffff;
+  --filter-border: #e6e6e6;
+  --filter-hover: #f5f5f5;
+  --filter-active: var(--accent-color);
+}
+
+[data-theme='dark'] {
+  // Base colors - using a more consistent dark theme
+  --bg-primary: #121212;
+  --bg-secondary: #1e1e1e;
+  --bg-elevated: #1a1a1a;
+  --text-primary: rgba(255, 255, 255, 0.85);
+  --text-secondary: rgba(255, 255, 255, 0.65);
+  --border-color: #333333;
+  --border-color-active: #555555;
+  --accent-color: #00d0ff;
+  --success-color: #52c41a;
+  --warning-color: #faad14;
+  --error-color: #ff4d4f;
+  
+  // Component specific
+  --hover-bg: #2c2c2c;
+  --drawer-bg: #1e1e1e;
+  --sidebar-bg: #1e1e1e;
+  --input-bg: #121212;
+  --input-border: #333333;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  
+  // Navigation
+  --menu-bg: #1e1e1e;
+  --menu-item-hover: #2c2c2c;
+  --menu-item-active: #2c2c2c;
+  --menu-item-selected: var(--accent-color);
+  
+  // Strategy cards
+  --card-bg: #1e1e1e;
+  --card-border: #333333;
+  --card-hover-border: var(--accent-color);
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --card-hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  
+  // Filters
+  --filter-bg: #1e1e1e;
+  --filter-border: #333333;
+  --filter-hover: #2c2c2c;
+  --filter-active: var(--accent-color);
+}
+
+// Apply dark mode styles to Ant Design components
+[data-theme='dark'] {
+  // Ant Design component overrides
+  .ant-layout {
+    background-color: var(--bg-primary);
+  }
+  
+  .ant-layout-header {
+    background-color: var(--bg-primary);
+    border-color: var(--border-color);
+  }
+  
+  .ant-layout-footer {
+    background-color: var(--bg-primary);
+    border-color: var(--border-color);
+  }
+  
+  .ant-layout-sider {
+    background-color: var(--sidebar-bg);
+  }
+  
+  // Card styles
+  .ant-card {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+    
+    .ant-card-head {
+      background-color: var(--bg-secondary);
+      border-color: var(--border-color);
+      color: var(--text-primary);
+    }
+    
+    .ant-card-body {
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+  }
+  
+  // Button styles
+  .ant-btn {
+    &.ant-btn-primary {
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+      color: #fff;
+      
+      &:hover, &:focus {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+        opacity: 0.85;
+      }
+    }
+    
+    &.ant-btn-default {
+      background-color: var(--bg-secondary);
+      border-color: var(--border-color);
+      color: var(--text-primary);
+      
+      &:hover, &:focus {
+        border-color: var(--accent-color);
+        color: var(--accent-color);
+      }
+    }
+    
+    &.ant-btn-text {
+      color: var(--text-primary);
+      
+      &:hover, &:focus {
+        background-color: var(--hover-bg);
+      }
+    }
+    
+    &.ant-btn-link {
+      color: var(--accent-color);
+    }
+    
+    &.ant-btn-dangerous {
+      color: var(--error-color);
+      border-color: var(--error-color);
+      
+      &.ant-btn-primary {
+        background-color: var(--error-color);
+        color: #fff;
+      }
+    }
+  }
+  
+  // Input styles
+  .ant-input {
+    background-color: var(--input-bg);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+    
+    &::placeholder {
+      color: var(--text-secondary);
+    }
+  }
+  
+  .ant-input-affix-wrapper {
+    background-color: var(--input-bg);
+    border-color: var(--border-color);
+    
+    .ant-input {
+      background-color: transparent;
+    }
+  }
+  
+  // Select styles
+  .ant-select {
+    .ant-select-selector {
+      background-color: var(--input-bg);
+      border-color: var(--border-color);
+      color: var(--text-primary);
+    }
+    
+    &:hover .ant-select-selector {
+      border-color: var(--accent-color);
+    }
+    
+    &.ant-select-focused .ant-select-selector {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 2px rgba(0, 208, 255, 0.2);
+    }
+    
+    .ant-select-arrow {
+      color: var(--text-secondary);
+    }
+  }
+  
+  .ant-select-dropdown {
+    background-color: var(--bg-secondary);
+    
+    .ant-select-item {
+      color: var(--text-primary);
+      
+      &-option-active {
+        background-color: var(--hover-bg);
+      }
+      
+      &-option-selected {
+        background-color: var(--hover-bg);
+        color: var(--accent-color);
+      }
+    }
+  }
+  
+  // Checkbox styles
+  .ant-checkbox-wrapper {
+    color: var(--text-primary);
+    
+    .ant-checkbox-inner {
+      background-color: var(--input-bg);
+      border-color: var(--border-color);
+    }
+    
+    .ant-checkbox-checked .ant-checkbox-inner {
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+    }
+  }
+  
+  // Radio styles
+  .ant-radio-wrapper {
+    color: var(--text-primary);
+    
+    .ant-radio-inner {
+      background-color: var(--input-bg);
+      border-color: var(--border-color);
+    }
+    
+    .ant-radio-checked .ant-radio-inner {
+      border-color: var(--accent-color);
+      
+      &::after {
+        background-color: var(--accent-color);
+      }
+    }
+  }
+  
+  // Switch styles
+  .ant-switch {
+    background-color: rgba(255, 255, 255, 0.25);
+    
+    &-checked {
+      background-color: var(--accent-color);
+    }
+    
+    &-handle {
+      &::before {
+        background-color: #fff;
+      }
+    }
+  }
+  
+  // Table styles
+  .ant-table {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    
+    .ant-table-thead > tr > th {
+      background-color: var(--bg-elevated);
+      color: var(--text-primary);
+      border-color: var(--border-color);
+    }
+    
+    .ant-table-tbody > tr > td {
+      border-color: var(--border-color);
+    }
+    
+    .ant-table-tbody > tr:hover > td {
+      background-color: var(--hover-bg);
+    }
+  }
+  
+  // Modal styles
+  .ant-modal {
+    .ant-modal-content {
+      background-color: var(--bg-secondary);
+      
+      .ant-modal-header {
+        background-color: var(--bg-secondary);
+        border-color: var(--border-color);
+        
+        .ant-modal-title {
+          color: var(--text-primary);
+        }
+      }
+      
+      .ant-modal-body {
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+      }
+      
+      .ant-modal-footer {
+        background-color: var(--bg-secondary);
+        border-color: var(--border-color);
+      }
+      
+      .ant-modal-close {
+        color: var(--text-secondary);
+        
+        &:hover {
+          color: var(--text-primary);
+        }
+      }
+    }
+  }
+  
+  // Drawer styles
+  .ant-drawer {
+    .ant-drawer-content {
+      background-color: var(--bg-secondary);
+      
+      .ant-drawer-header {
+        background-color: var(--bg-secondary);
+        border-color: var(--border-color);
+        
+        .ant-drawer-title {
+          color: var(--text-primary);
+        }
+      }
+      
+      .ant-drawer-body {
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+      }
+      
+      .ant-drawer-footer {
+        border-color: var(--border-color);
+      }
+      
+      .ant-drawer-close {
+        color: var(--text-secondary);
+        
+        &:hover {
+          color: var(--text-primary);
+        }
+      }
+    }
+  }
+  
+  // Divider
+  .ant-divider {
+    border-color: var(--border-color);
+  }
+  
+  // Form
+  .ant-form {
+    .ant-form-item-label > label {
+      color: var(--text-primary);
+    }
+    
+    .ant-form-item-explain, 
+    .ant-form-item-extra {
+      color: var(--text-secondary);
+    }
+  }
+  
+  // Menu
+  .ant-menu {
+    background-color: var(--menu-bg);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+    
+    .ant-menu-item {
+      color: var(--text-primary);
+      
+      &:hover {
+        color: var(--accent-color);
+      }
+      
+      &-selected {
+        color: var(--accent-color);
+        background-color: var(--menu-item-active);
+      }
+    }
+  }
+  
+  // Custom component styles
+  .strategy-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    
+    &__title {
+      color: var(--text-primary);
+    }
+    
+    &__description {
+      color: var(--text-secondary);
+    }
+    
+    &__icon, &__arrow {
+      color: var(--text-secondary);
+    }
+    
+    &:hover {
+      border-color: var(--accent-color);
+    }
+  }
+  
+  .page-title {
+    background-color: var(--bg-primary);
+    
+    &__heading {
+      color: var(--text-primary);
+    }
+    
+    &__subtitle {
+      color: var(--text-secondary);
+    }
+  }
+  
+  .app-navigation {
+    background-color: var(--bg-primary);
+    border-color: var(--border-color);
+    
+    &__item {
+      color: var(--text-secondary);
+      
+      &--active {
+        color: var(--accent-color);
+      }
+    }
+  }
+  
+  .account-header {
+    background-color: var(--bg-primary);
+    border-color: var(--border-color);
+    
+    &__type {
+      color: var(--accent-color);
+    }
+    
+    &__balance {
+      color: var(--text-primary);
+    }
+    
+    &__deposit-btn {
+      background-color: var(--accent-color);
+      color: var(--text-primary);
+            
+      &:hover {
+        opacity: 0.85;
+      }
+    }
+  }
+  
+  .settings {
+    &__title {
+      color: var(--text-primary);
+    }
+    
+    &__section-title {
+      color: var(--text-secondary);
+    }
+    
+    &__info-grid {
+      background-color: var(--bg-secondary);
+    }
+    
+    &__theme-switch {
+      background-color: var(--bg-secondary);
+    }
+    
+    &__theme-label {
+      color: var(--text-primary);
+    }
+  }
+}

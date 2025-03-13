@@ -1,0 +1,51 @@
+// Brand Colors
+$primary-color: #00d0ff;
+$secondary-color: #85acb0;
+$success-color: #4bb4b3;
+$warning-color: #ffad3a;
+$error-color: #00d0ff;
+$text-color: rgba(0, 0, 0, 0.85);
+$text-color-secondary: rgba(0, 0, 0, 0.45);
+
+// Theme colors
+$colorBgContainer: #ffffff;
+$colorBgLayout: #f0f2f5;
+$colorBorder: #d9d9d9;
+
+// Breakpoints
+$screen-xs: 480px;
+$screen-sm: 576px;
+$screen-md: 768px;
+$screen-lg: 992px;
+$screen-xl: 1200px;
+$screen-xxl: 1600px;
+
+// Spacing
+$spacing-unit: 8px;
+$spacing-xs: $spacing-unit;
+$spacing-sm: $spacing-unit * 2;
+$spacing-md: $spacing-unit * 3;
+$spacing-lg: $spacing-unit * 4;
+$spacing-xl: $spacing-unit * 5;
+
+// Font sizes
+$font-size-base: 14px;
+$font-size-lg: 16px;
+$font-size-sm: 12px;
+
+// Border radius
+$border-radius-base: 4px;
+$border-radius-sm: 2px;
+$border-radius-lg: 8px;
+
+// Z-index
+$zindex-dropdown: 1050;
+$zindex-sticky: 1020;
+$zindex-fixed: 1030;
+$zindex-modal-backdrop: 1040;
+$zindex-modal: 1050;
+$zindex-popover: 1060;
+$zindex-tooltip: 1070;
+
+// Transitions
+$transition-base: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);

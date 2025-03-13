@@ -1,0 +1,211 @@
+.trade-card {
+  height: 100%;
+  background: var(--card-bg) !important;
+  border: 1px solid var(--card-border) !important;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: var(--card-hover-border) !important;
+    box-shadow: var(--card-hover-shadow) !important;
+    transform: translateY(-2px);
+  }
+
+  &.profit, &.loss {
+    border-left: 4px solid var(--accent-color) !important;
+  }
+  
+  &.updated {
+    animation: highlight-update 2s ease-in-out;
+  }
+  
+  @keyframes highlight-update {
+    0% {
+      box-shadow: 0 0 0 2px rgba(var(--accent-color-rgb), 0);
+    }
+    20% {
+      box-shadow: 0 0 0 2px rgba(var(--accent-color-rgb), 0.8);
+    }
+    100% {
+      box-shadow: 0 0 0 2px rgba(var(--accent-color-rgb), 0);
+    }
+  }
+
+  .ant-card-body {
+    padding: 20px;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .ant-tag {
+      margin: 0;
+      font-size: 12px;
+      padding: 2px 8px;
+    }
+  }
+
+  &__session-id {
+    font-size: 12px;
+    color: var(--text-secondary);
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__time {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-bottom: 16px;
+
+    .anticon {
+      margin-right: 8px;
+    }
+  }
+
+  &__profit {
+    margin-bottom: 16px;
+    
+    h3 {
+      margin: 0;
+      
+      &.profit, &.loss {
+        color: var(--accent-color);
+      }
+    }
+  }
+  
+  &.profit.updated {
+    .trade-card__profit h3 {
+      animation: highlight-profit 2s ease-in-out;
+    }
+  }
+  
+  &.loss.updated {
+    .trade-card__profit h3 {
+      animation: highlight-loss 2s ease-in-out;
+    }
+  }
+  
+  @keyframes highlight-profit {
+    0% { color: var(--accent-color); }
+    20% { color: var(--success-color); }
+    100% { color: var(--accent-color); }
+  }
+  
+  @keyframes highlight-loss {
+    0% { color: var(--accent-color); }
+    20% { color: var(--error-color); }
+    100% { color: var(--accent-color); }
+  }
+
+  &__details {
+    margin-bottom: 16px;
+    
+    .ant-space-item {
+      color: var(--text-secondary);
+      
+      .anticon {
+        margin-right: 8px;
+        color: var(--text-secondary);
+      }
+    }
+  }
+
+  &__contracts {
+    border-top: 1px solid var(--border-color);
+    padding-top: 16px;
+    margin-top: 16px;
+
+    .ant-typography {
+      margin-bottom: 12px;
+    }
+  }
+
+  &__contracts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__contract {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    background: var(--bg-secondary);
+    border-radius: 4px;
+    font-size: 13px;
+    transition: background-color 0.3s ease;
+
+    .ant-typography {
+      margin: 0;
+
+      &.profit, &.loss {
+        color: var(--accent-color);
+      }
+    }
+  }
+  
+  &.updated {
+    .trade-card__contract {
+      animation: highlight-contract 2s ease-in-out;
+    }
+  }
+  
+  @keyframes highlight-contract {
+    0% { background: var(--bg-secondary); }
+    20% { background: rgba(var(--accent-color-rgb), 0.1); }
+    100% { background: var(--bg-secondary); }
+  }
+
+  // Loading state
+  &.ant-card-loading {
+    .ant-card-body {
+      padding: 20px;
+    }
+
+    .ant-card-loading-content {
+      padding: 0;
+    }
+
+    .ant-card-loading-block {
+      background: var(--hover-bg);
+    }
+  }
+
+  &__actions {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+
+    .ant-btn {
+      min-width: 120px;
+      
+      &.ant-btn-primary {
+        background: var(--accent-color);
+        border-color: var(--accent-color);
+        
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+
+  // Responsive styles
+  @media (max-width: 576px) {
+    .ant-card-body {
+      padding: 16px;
+    }
+
+    &__contract {
+      flex-wrap: wrap;
+    }
+  }
+}

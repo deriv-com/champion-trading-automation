@@ -1,0 +1,217 @@
+.strategy-form-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-primary);
+  padding-bottom: 80px;
+}
+
+.strategy-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+
+  .header-left {
+    .back-button {
+      padding: 0;
+      border: none;
+      font-size: 20px;
+
+      svg {
+        fill: var(--text-primary);
+      }
+
+      &:hover {
+        background: transparent;
+        color: var(--accent-color);
+      }
+    }
+  }
+
+  .header-right {
+    .help-button {
+      padding: 0;
+      width: 36px;
+      height: 36px;
+      border: none;
+      background-color: var(--hover-bg);
+
+      svg {
+        fill: var(--text-primary);
+      }
+
+      .question-icon {
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--text-secondary);
+      }
+
+      &:hover {
+        background-color: var(--card-bg);
+      }
+    }
+  }
+}
+
+.strategy-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 16px;
+  padding: 0;
+  color: var(--text-primary);
+}
+
+.strategy-form {
+  padding: 0 16px;
+
+  .ant-form-item-label {
+    padding-bottom: 8px;
+
+    label {
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+  }
+
+  input {
+    color: var(--text-primary) !important;
+  }
+
+  .parameters-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 16px 0;
+    color: var(--text-primary);
+  }
+
+  .trade-type-item {
+    margin-bottom: 16px;
+
+    .ant-segmented {
+      padding: 4px;
+      background-color: var(--hover-bg);
+      border-radius: 8px;
+      width: 100%;
+
+      .ant-segmented-item {
+        transition: all 0.3s;
+        border-radius: 4px;
+        color: var(--text-primary);
+
+        &-selected {
+          background-color: var(--bg-elevated);
+          box-shadow: var(--card-shadow);
+        }
+
+        .ant-segmented-item-label {
+          padding: 6px 11px;
+        }
+      }
+    }
+  }
+
+  .market-item {
+    margin-bottom: 16px;
+
+    svg {
+      fill: var(--text-primary);
+    }
+
+    .market-icon-container {
+      display: flex;
+      align-items: center;
+
+      .market-icon-vol {
+        background-color: rgba(var(--accent-color-rgb), 0.1);
+        color: var(--accent-color);
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      .market-icon-dot {
+        width: 6px;
+        height: 6px;
+        background-color: var(--error-color);
+        border-radius: 50%;
+        margin-left: 4px;
+      }
+    }
+  }
+
+  .stake-item,
+  .repeat-item {
+    margin-bottom: 16px;
+  }
+}
+
+.form-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  z-index: 10;
+
+  .create-button {
+    height: 48px;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: var(--accent-color);
+    border-radius: 24px;
+    border: none;
+
+    &:hover {
+      background-color: var(--accent-color);
+    }
+  }
+}
+
+// Market Selector Modal
+.ant-modal {
+  z-index: 1050 !important; // Ensure modal is above other overlays
+}
+
+.market-selector-list {
+  max-height: 300px;
+  overflow-y: auto;
+
+  .market-selector-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: var(--hover-bg);
+    }
+
+    .market-icon-container {
+      display: flex;
+      align-items: center;
+      margin-right: 12px;
+
+      .market-icon-vol {
+        background-color: rgba(var(--accent-color-rgb), 0.1);
+        color: var(--accent-color);
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      .market-icon-dot {
+        width: 6px;
+        height: 6px;
+        background-color: var(--error-color);
+        border-radius: 50%;
+        margin-left: 4px;
+      }
+    }
+  }
+}

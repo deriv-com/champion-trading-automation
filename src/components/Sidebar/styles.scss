@@ -1,0 +1,49 @@
+.app-sidebar {
+  height: 100%;
+  border-right: 1px solid var(--border-color);
+  background: var(--bg-primary);
+
+  &__menu {
+    border-right: none !important;
+
+    .ant-menu-item {
+      margin: 0 !important;
+      width: 100% !important;
+      border-radius: 0;
+
+      &:hover {
+        color: var(--primary-color) !important;
+      }
+
+      &-selected {
+        background-color: var(--accent-color) !important;
+        color: var(--text-on-accent) !important;
+
+        &:hover {
+          color: var(--text-on-accent) !important;
+        }
+
+        .anticon {
+          color: var(--text-on-accent) !important;
+        }
+      }
+
+      &-disabled {
+        opacity: 0.5 !important;
+        cursor: not-allowed !important;
+
+        &:hover {
+          color: var(--text-secondary) !important;
+        }
+
+        .anticon {
+          opacity: 0.5 !important;
+        }
+      }
+    }
+
+    .anticon {
+      font-size: 18px !important;
+    }
+  }
+}

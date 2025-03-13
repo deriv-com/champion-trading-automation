@@ -1,0 +1,95 @@
+.strategy-card {
+  position: relative; /* Added for absolute positioning of arrow */
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  margin-bottom: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 0.5rem;
+  margin-block: 0.3rem;
+  box-shadow: var(--card-shadow);
+  
+  &:hover {
+    border-color: var(--card-hover-border);
+    box-shadow: var(--card-hover-shadow);
+    transform: translateY(-2px);
+  }
+  
+  &:active {
+    background-color: var(--hover-bg);
+  }
+  
+  &__icon {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+    color: var(--text-primary);
+  }
+  
+  &__content {
+    flex: 1;
+    padding-left: 48px; /* Add space for the icon */
+  }
+  
+  &__title {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    font-weight: 700; /* Bolder text */
+    color: var(--text-primary);
+  }
+  
+  &__description {
+    margin: 0;
+    font-size: 12px;
+    color: var(--text-secondary); /* Use theme variable */
+    line-height: 1.4;
+    width: 90%;
+  }
+  
+  &__arrow {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    color: var(--text-secondary); /* Use theme variable */
+    font-size: 16px;
+  }
+  
+  @media (min-width: 768px) {
+    padding: 20px;
+    
+    &__icon {
+      top: 20px;
+      left: 20px;
+      width: 36px;
+      height: 36px;
+      font-size: 22px;
+    }
+    
+    &__content {
+      padding-left: 56px; /* Increased space for the icon on larger screens */
+    }
+    
+    &__title {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+    
+    &__description {
+      font-size: 14px;
+    }
+    
+    &__arrow {
+      top: 20px;
+      right: 20px;
+    }
+  }
+}

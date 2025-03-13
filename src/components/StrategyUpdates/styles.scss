@@ -1,0 +1,61 @@
+.strategy-updates {
+  h3 {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+
+  .connection-status {
+    padding: 12px;
+    border-radius: 4px;
+    background-color: var(--bg-secondary);
+    font-size: 14px;
+    transition: all 0.3s ease;
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .status-text {
+      position: relative;
+      padding-left: 16px;
+      color: var(--text-primary);
+      font-weight: 500;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--accent-color);
+        transition: background-color 0.3s ease;
+      }
+      
+      &[data-connected='true']::before {
+        background-color: var(--success-color);
+      }
+    }
+
+    .connected-time {
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    &.error {
+      border: 1px solid var(--accent-color);
+      
+      .error-message {
+        margin-top: 8px;
+        color: var(--accent-color);
+        font-size: 12px;
+      }
+    }
+  }
+}

@@ -1,0 +1,103 @@
+.strategy-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 480px;
+  height: 100vh;
+  background: var(--drawer-bg);
+  box-shadow: -4px 0 24px var(--shadow-color);
+  z-index: 1100;
+  visibility: hidden;
+  opacity: 0;
+  animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transition: background-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+
+  &--open {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    bottom: 0;
+    top: auto;
+  }
+
+  &__backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--backdrop-color);
+    backdrop-filter: blur(4px);
+    z-index: 1099;
+    opacity: 0;
+    visibility: hidden;
+    animation: fadeIn 0.3s ease forwards;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-elevated);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    min-height: 52px;
+  }
+
+  &__title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--accent-color);
+  }
+
+  &__close {
+    font-size: 20px !important;
+    padding: 8px !important;
+    margin: -8px !important;
+    color: var(--text-secondary) !important;
+    transition: all 0.3s ease !important;
+
+    &:hover {
+      color: var(--accent-color) !important;
+      background: var(--hover-bg) !important;
+    }
+  }
+
+  &__body {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    background: var(--drawer-bg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+  }
+}

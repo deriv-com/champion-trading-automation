@@ -1,0 +1,22 @@
+.strategy-list-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+}
+
+.strategy-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-inline: 1rem;
+  
+  // Add padding at the bottom to ensure content isn't hidden behind the mobile navigation
+  padding-bottom: 60px;
+  
+  @media (min-width: 768px) {
+    max-width: 768px;
+    margin: 0 auto;
+    padding-bottom: 0;
+  }
+}

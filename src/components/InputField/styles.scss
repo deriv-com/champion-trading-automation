@@ -1,0 +1,110 @@
+.input-field-wrapper {
+  position: relative;
+  width: 100%;
+  border: 1px solid var(--border-color);
+  padding: 0.3rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s;
+
+  &:focus-within {
+    border-color: var(--border-color-active);
+    box-shadow: 0 0 0 2px var(--border-color-shadow);
+  }
+
+  &:hover:not(:focus-within) {
+    border-color: var(--border-color-active);
+  }
+
+  &.has-error {
+    border-color: var(--border-color-error);
+    
+    &:focus-within {
+      box-shadow: 0 0 0 2px var(--border-color-error-shadow);
+    }
+  }
+
+  .input-field-label {
+    display: block;
+    font-size: 14px;
+    color: var(--text-primary);
+  }
+
+  .input-field-control {
+    width: 100%;
+    height: 25px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    background-color: transparent;
+    box-shadow: none;
+    padding: 0;
+    color: var(--text-primary);
+    
+    &::placeholder {
+      color: var(--text-secondary);
+    }
+  }
+
+  .input-field-prefix-container {
+    position: relative;
+    width: 100%;
+  }
+
+  .input-field-selectable-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 44px;
+    cursor: pointer;
+    user-select: none;
+    
+    .input-field-prefix {
+      display: flex;
+      align-items: center;
+      margin-right: 8px;
+    }
+    
+    .input-field-selectable-value {
+      flex: 1;
+      font-size: 16px;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .input-field-suffix {
+      display: flex;
+      align-items: center;
+      margin-left: 8px;
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+  }
+
+  .input-field-error {
+    color: #ff4d4f;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+}
+
+// Override Ant Design styles
+.ant-input-number {
+  width: 100%;
+
+  .ant-input-number-handler-wrap {
+    opacity: 1;
+    border-left: 1px solid var(--border-color);
+  }
+
+  .ant-input-number-input {
+    padding: 0;
+    color: var(--text-primary);
+  }
+}
+
+.ant-select-focused .ant-select-selector {
+  border-color: var(--border-color-active) !important;
+  box-shadow: 0 0 0 2px var(--border-color-shadow) !important;
+}

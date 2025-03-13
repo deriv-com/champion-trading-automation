@@ -1,0 +1,97 @@
+@use 'sass:color';
+
+.app-layout {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  transition: background-color 0.3s ease;
+}
+
+.app-main {
+  min-height: 100vh;
+  padding: 0;
+  transition: background-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-primary);
+}
+
+.app-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 60px; // Space for mobile navigation
+  background-color: var(--bg-primary);
+  
+  @media (min-width: 768px) {
+    padding: 70px 16px 16px; // Keep space for header
+    max-width: 768px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  
+  @media (min-width: 992px) {
+    padding: 70px 24px 24px; // Keep space for header
+  }
+}
+
+// Component-specific styles
+.ant-layout {
+  transition: background-color 0.3s ease;
+}
+
+.ant-card,
+.ant-modal-content,
+.ant-drawer-content,
+.ant-picker-panel-container,
+.ant-input,
+.ant-btn {
+  transition: all 0.3s ease;
+}
+
+// Strategy cards
+.strategy-card {
+  height: 100%;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-color);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 1200px) {
+  .ant-col {
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 992px) {
+  .ant-col {
+    margin-bottom: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ant-col {
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .ant-col {
+    margin-bottom: 12px;
+  }
+}
+
+.ant-col:last-child {
+  margin-bottom: 0;
+}
+
+// Ensure content containers are responsive
+.ant-card, 
+.ant-list,
+.ant-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}

@@ -1,0 +1,92 @@
+@use 'themes';
+
+// Reset and base styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'Noto Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+// Common utility classes
+.container {
+  width: 100%;
+  padding-right: 16px;
+  padding-left: 16px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+// Spacing utilities
+.m {
+  &t {
+    &-xs { margin-top: 4px; }
+    &-sm { margin-top: 8px; }
+    &-md { margin-top: 16px; }
+    &-lg { margin-top: 24px; }
+    &-xl { margin-top: 32px; }
+  }
+  
+  &b {
+    &-xs { margin-bottom: 4px; }
+    &-sm { margin-bottom: 8px; }
+    &-md { margin-bottom: 16px; }
+    &-lg { margin-bottom: 24px; }
+    &-xl { margin-bottom: 32px; }
+  }
+}
+
+.p {
+  &t {
+    &-xs { padding-top: 4px; }
+    &-sm { padding-top: 8px; }
+    &-md { padding-top: 16px; }
+    &-lg { padding-top: 24px; }
+    &-xl { padding-top: 32px; }
+  }
+  
+  &b {
+    &-xs { padding-bottom: 4px; }
+    &-sm { padding-bottom: 8px; }
+    &-md { padding-bottom: 16px; }
+    &-lg { padding-bottom: 24px; }
+    &-xl { padding-bottom: 32px; }
+  }
+}
+
+// Flex utilities
+.d-flex { display: flex; }
+.flex-column { flex-direction: column; }
+.justify-content {
+  &-center { justify-content: center; }
+  &-between { justify-content: space-between; }
+  &-around { justify-content: space-around; }
+}
+.align-items {
+  &-center { align-items: center; }
+  &-start { align-items: flex-start; }
+  &-end { align-items: flex-end; }
+}
+
+// Text utilities
+.text {
+  &-center { text-align: center; }
+  &-left { text-align: left; }
+  &-right { text-align: right; }
+  &-primary { color: var(--accent-color); }
+  &-secondary { color: var(--text-secondary); }
+  &-error { color: var(--error-color); }
+  &-warning { color: var(--warning-color); }
+  &-success { color: var(--success-color); }
+}

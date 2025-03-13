@@ -1,0 +1,57 @@
+.trade-filters {
+  .ant-select {
+    &:not(:last-child) {
+      margin-right: 16px;
+    }
+
+    @media (max-width: 768px) {
+      width: 100% !important;
+      margin-right: 0 !important;
+    }
+  }
+
+  .ant-select-selector {
+    background-color: var(--input-bg) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+
+    &:hover {
+      border-color: var(--accent-color) !important;
+    }
+  }
+
+  .ant-select-selection-placeholder {
+    color: var(--text-secondary) !important;
+  }
+
+  .ant-select-arrow {
+    color: var(--text-secondary);
+  }
+
+  .ant-select-focused {
+    .ant-select-selector {
+      border-color: var(--accent-color) !important;
+      box-shadow: 0 0 0 2px rgba(var(--accent-color-rgb), 0.1) !important;
+    }
+  }
+
+  .ant-select-item {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+
+    &-option-selected {
+      background-color: var(--hover-bg);
+      color: var(--accent-color);
+    }
+
+    &-option-active {
+      background-color: var(--hover-bg);
+    }
+  }
+
+  .ant-select-dropdown {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+  }
+}
