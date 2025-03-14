@@ -113,6 +113,47 @@ The application implements a sophisticated real-time communication system:
 - **Event Filtering**: Client-side filtering of relevant events
 - **Reconnection Logic**: Automatic reconnection with exponential backoff
 
+#### Unified Stream Service Architecture
+The application implements a unified streaming service architecture that abstracts connection handling and event processing:
+
+```mermaid
+graph TD
+    A[Client Code] -->|Uses| B[Service Adapters]
+    B -->|Uses| C[Stream Services]
+    C -->|Extends| D[BaseStreamService]
+    
+    subgraph "Service Adapters"
+    B1[BalanceStreamAdapter]
+    B2[SSEServiceAdapter]
+    end
+    
+    subgraph "Stream Services"
+    C1[EventSourceStreamService]
+    C2[FetchStreamService]
+    end
+    
+    B1 -->|Uses| C1
+    B2 -->|Uses| C2
+    C1 -->|Extends| D
+    C2 -->|Extends| D
+```
+
+1. **Base Stream Service**
+   - Abstract base class with common functionality
+   - Connection management and lifecycle methods
+   - Error handling and reconnection logic
+   - Message processing pipeline
+
+2. **Specialized Stream Services**
+   - EventSourceStreamService: Uses native EventSource API
+   - FetchStreamService: Uses fetch API with stream reading
+   - Each implements protocol-specific connection handling
+
+3. **Service Adapters**
+   - Maintain backward compatibility with existing code
+   - Transform data between formats as needed
+   - Provide service-specific functionality
+
 ### Error Handling Strategy
 The application implements a comprehensive error handling strategy:
 

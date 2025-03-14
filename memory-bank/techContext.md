@@ -99,15 +99,16 @@
 - **Usage**: Encapsulating and reusing stateful logic
 - **Key Hooks**:
   - useWebSocket: WebSocket connection management
-  - useSSE: Server-sent events handling
-  - useBalanceSSE: Balance updates via SSE
+  - useSSE: Server-sent events handling using unified stream service
+  - useBalanceSSE: Balance updates via unified stream service
   - useBots: Bot management operations
-  - useExternalSSE: External SSE integration
+  - useExternalSSE: External SSE integration with unified stream service
 - **Implementation Notes**:
   - Consistent naming convention
   - Clear return type definitions
   - Error handling and loading states
   - Cleanup on unmount
+  - Abstraction of stream implementation details
 
 ### Singleton Stores
 - **Usage**: Global state accessible outside React components
@@ -155,7 +156,11 @@
   - Automatic reconnection
   - Message parsing
 - **Implementation Notes**:
-  - Custom wrapper for EventSource API
+  - Unified stream service architecture
+  - Base abstract class with specialized implementations
+  - EventSource and Fetch API implementations
+  - Adapter pattern for backward compatibility
+  - Factory pattern for stream service creation
   - Typed event handling
   - Reconnection with exponential backoff
   - Multiple stream support
