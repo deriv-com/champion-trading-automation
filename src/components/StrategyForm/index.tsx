@@ -14,6 +14,7 @@ import { Bot, useBots } from "../../hooks/useBots";
 import { TradeErrorBoundary } from "../ErrorBoundary/TradeErrorBoundary";
 import { TradeStrategy } from "../../types/trade";
 import { useTrade } from "../../contexts/TradeContext";
+import { useNotification } from "../../contexts/NotificationContext";
 import { MarketInfo } from "../../types/market";
 import MarketSelector from "../MarketSelector";
 import "./styles.scss";
@@ -35,6 +36,7 @@ export function StrategyForm({
   const initialValues = useRef<FormValues | null>(null);
   const { submitTrade } = useTrade();
   const { addBot, updateBot } = useBots();
+  const { showNotification, showSimpleNotification } = useNotification();
   const navigate = useNavigate();
   const isEditMode = !!editBot;
 
@@ -100,21 +102,35 @@ export function StrategyForm({
         updateBot(botData);
         console.log("Bot updated successfully:", botData);
         
+        // Show simple notification with the new design
+        showSimpleNotification('Changes has been saved successfully.');
+        
         // Close the drawer first, then navigate
         onBack?.();
         navigate("/bots");
       } else {
-         // Navigate to the bots list page
-         navigate("/bots");
         // Add new bot
         addBot(botData);
         
         // Submit trade through trade context (only for new bots)
         const sessionId = await submitTrade(values, strategyId as TradeStrategy);
         console.log("Bot created with session ID:", sessionId);
+        
+        // Show simple notification with the new design
+        showSimpleNotification('Bot has been created successfully.');
+        
+        // Navigate to the bots list page
+        navigate("/bots");
       }
     } catch (error) {
       console.error("Failed to create/update bot:", error);
+      
+      // Show error notification
+      showNotification(
+        'Error',
+        `Failed to ${isEditMode ? 'update' : 'create'} bot. Please try again.`,
+        'error'
+      );
     } finally {
       setIsSubmitting(false);
     }

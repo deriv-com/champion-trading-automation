@@ -59,6 +59,34 @@ function MyComponent() {
 }
 ```
 
+### NotificationContext
+
+Provides global notification functionality throughout the application.
+
+**Key Features:**
+- Shows notifications with customizable message and description
+- Supports different notification types: success, info, warning, error
+- Allows customizing notification placement (default: bottom)
+- Centralizes notification management for consistent user experience
+
+**Usage:**
+```tsx
+import { useNotification } from '../contexts/NotificationContext';
+
+function MyComponent() {
+  const { showNotification } = useNotification();
+  
+  // Show a notification with default settings (info type, bottom position)
+  showNotification('Operation Successful', 'Your action has been completed.');
+  
+  // Show a warning notification
+  showNotification('Warning', 'This action cannot be undone.', 'warning');
+  
+  // Show an error notification with custom position
+  showNotification('Error Occurred', 'Failed to save changes.', 'error', 'topRight');
+}
+```
+
 ### PositionsContext
 
 Manages trading positions data and state.

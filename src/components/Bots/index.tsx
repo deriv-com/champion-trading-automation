@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useBots, Bot } from "../../hooks/useBots";
 import { StrategyDrawer } from "../StrategyDrawer";
 import { Strategy } from "../../types/strategy";
+import { useNotification } from "../../contexts/NotificationContext";
 
 /**
  * Bots: Displays a list of trading bots with search functionality.
@@ -27,6 +28,7 @@ export function Bots() {
     deleteBot, 
     filterBots 
   } = useBots();
+  const { showSimpleNotification } = useNotification();
 
   const [searchVisible, setSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -52,6 +54,13 @@ export function Bots() {
   const handleRunBot = (botId: string) => {
     console.log(`Running bot ${botId}`);
     // Implement bot running logic here
+    
+    // Find the bot to get its name
+    const botToRun = bots.find(bot => bot.id === botId);
+    const botName = botToRun ? botToRun.name : 'Bot';
+    
+    // Show simple notification with the new design
+    showSimpleNotification(`${botName} is now running.`);
   };
 
   const navigate = useNavigate();
@@ -131,7 +140,15 @@ export function Bots() {
   }, [searchVisible]);
 
   const handleDeleteBot = (botId: string) => {
+    // Find the bot to get its name before deleting
+    const botToDelete = bots.find(bot => bot.id === botId);
+    const botName = botToDelete ? botToDelete.name : 'Bot';
+    
+    // Delete the bot
     deleteBot(botId);
+    
+    // Show simple notification with the new design
+    showSimpleNotification(`${botName} has been deleted.`);
   };
 
   /**
