@@ -1,13 +1,14 @@
 import { Form, Button, Segmented } from "antd";
 import { BottomActionSheet } from "../BottomActionSheet";
-import { DownOutlined } from "@ant-design/icons";
 import { InputField } from "../InputField";
 import {
+  StandaloneChevronDownRegularIcon, 
+  LegacyClose2pxIcon,
   LabelPairedArrowLeftMdBoldIcon,
   LabelPairedCircleQuestionMdBoldIcon,
   MarketDerivedVolatility1001sIcon,
 } from "@deriv/quill-icons";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Bot, useBots } from "../../hooks/useBots";
 import { TradeErrorBoundary } from "../ErrorBoundary/TradeErrorBoundary";
@@ -28,7 +29,10 @@ export function StrategyForm({
   const [form] = Form.useForm<FormValues>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showMarketSelector, setShowMarketSelector] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [selectedMarket, setSelectedMarket] = useState<MarketInfo>();
+  const [formDirty, setFormDirty] = useState(false);
+  const initialValues = useRef<FormValues | null>(null);
   const { submitTrade } = useTrade();
   const { addBot, updateBot } = useBots();
   const navigate = useNavigate();
@@ -42,15 +46,36 @@ export function StrategyForm({
       const initialStakeParam = editBot.params.find(param => param.key === "initial_stake");
       
       // Set form values
-      form.setFieldsValue({
+      const values = {
         botName: editBot.name,
         tradeType: editBot.tradeType,
         market: editBot.market,
         repeatTrade: repeatTradeParam ? repeatTradeParam.value : 2,
         initialStake: initialStakeParam ? initialStakeParam.value : 10,
-      });
+      };
+      
+      form.setFieldsValue(values);
+      initialValues.current = values;
     }
   }, [isEditMode, editBot, form]);
+
+  // Track form changes
+  const handleFormChange = () => {
+    if (!initialValues.current) return;
+    
+    const currentValues = form.getFieldsValue();
+    const isDirty = Object.keys(currentValues).some(key => {
+      // @ts-expect-error - We know these keys exist in both objects
+      return currentValues[key] !== initialValues.current[key];
+    });
+    
+    setFormDirty(isDirty);
+  };
+
+  useEffect(() => {
+    // Reset form dirty state when component mounts
+    setFormDirty(false);
+  }, []);
 
   const handleSubmit = async (values: FormValues) => {
     // for now some values here are static 
@@ -97,6 +122,25 @@ export function StrategyForm({
 
   const handleReset = () => {
     form.resetFields();
+    setFormDirty(false);
+  };
+
+  const handleBackClick = () => {
+    if (isEditMode && formDirty) {
+      setShowConfirmation(true);
+    } else {
+      onBack?.();
+    }
+  };
+
+  const handleConfirmDiscard = () => {
+    setShowConfirmation(false);
+    handleReset();
+    onBack?.();
+  };
+
+  const handleCancelDiscard = () => {
+    setShowConfirmation(false);
   };
 
 
@@ -107,9 +151,9 @@ export function StrategyForm({
           <div className="header-left">
             <Button
               type="text"
-              icon={<LabelPairedArrowLeftMdBoldIcon />}
+              icon={isEditMode ? <LegacyClose2pxIcon iconSize='xs' /> : <LabelPairedArrowLeftMdBoldIcon />}
               className="back-button"
-              onClick={onBack}
+              onClick={handleBackClick}
             />
           </div>
           <div className="header-right">
@@ -135,6 +179,7 @@ export function StrategyForm({
             initialStake: 10,
             repeatTrade: 2,
           }}
+          onValuesChange={handleFormChange}
         >
           <Form.Item name="botName">
             <InputField
@@ -162,7 +207,7 @@ export function StrategyForm({
                   type="selectable" 
                   value={"Volatility 100 (1s) Index"}
                   prefix={<MarketDerivedVolatility1001sIcon fill='#000000' iconSize='sm' />}
-                  suffix={<DownOutlined />}
+                  suffix={<StandaloneChevronDownRegularIcon />}
                   onClick={() => setShowMarketSelector(true)}
                 />
           </Form.Item>
@@ -192,7 +237,7 @@ export function StrategyForm({
             onClick={() => form.submit()}
             loading={isSubmitting}
           >
-            {isEditMode ? "Update bot" : "Create bot"}
+            {isEditMode ? "Save bot" : "Create bot"}
           </Button>
         </div>
       </div>
@@ -212,6 +257,35 @@ export function StrategyForm({
           }}
           selectedMarket={selectedMarket}
         />
+      </BottomActionSheet>
+
+      {/* Confirmation Dialog */}
+      <BottomActionSheet
+        isOpen={showConfirmation}
+        onClose={() => setShowConfirmation(false)}
+        className="confirmation-dialog"
+        height="auto"
+      >
+        <div className="confirmation-content">
+          <h2>Discard changes?</h2>
+          <p>You have unsaved changes. If you close now, your changes will be lost.</p>
+          <div className="confirmation-buttons">
+            <Button 
+              type="primary" 
+              block 
+              onClick={handleConfirmDiscard}
+              className="confirm-button"
+            >
+              Confirm
+            </Button>
+            <Button 
+              block 
+              onClick={handleCancelDiscard}
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
       </BottomActionSheet>
     </TradeErrorBoundary>
   );

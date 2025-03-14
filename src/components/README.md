@@ -100,8 +100,6 @@ Each component follows these principles:
 
 - **ErrorBoundary**: Error handling components for graceful failure. Catches and displays errors without crashing the application.
 
-- **ProcessingStack**: Manages processing states and notifications. Handles loading states, success/error messages, and action queues.
-
 ## Dependencies
 
 - **Ant Design**: Primary UI component library

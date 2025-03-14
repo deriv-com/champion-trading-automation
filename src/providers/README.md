@@ -21,7 +21,6 @@ import { AuthProvider } from '../contexts/AuthContext';
 import { ThemeProvider } from '../contexts/ThemeContext';
 import { NavigationProvider } from '../contexts/NavigationContext';
 import { PositionsProvider } from '../contexts/PositionsContext';
-import { ProcessingStackProvider } from '../contexts/ProcessingStackContext';
 import { SSEProvider } from '../contexts/SSEContext';
 import { TradeProvider } from '../contexts/TradeContext';
 
@@ -35,13 +34,11 @@ export function AppProviders({ children }: AppProvidersProps) {
       <ThemeProvider>
         <NavigationProvider>
           <PositionsProvider>
-            <ProcessingStackProvider>
               <SSEProvider>
                 <TradeProvider>
                   {children}
                 </TradeProvider>
               </SSEProvider>
-            </ProcessingStackProvider>
           </PositionsProvider>
         </NavigationProvider>
       </ThemeProvider>
@@ -58,9 +55,8 @@ The order of providers is important as it determines the dependency hierarchy:
 2. **ThemeProvider**: Provides theme state and methods for theme switching
 3. **NavigationProvider**: Provides navigation state and methods
 4. **PositionsProvider**: Provides trading positions data and methods
-5. **ProcessingStackProvider**: Provides processing state management
-6. **SSEProvider**: Provides Server-Sent Events connection and data
-7. **TradeProvider**: Provides trading functionality and state
+5. **SSEProvider**: Provides Server-Sent Events connection and data
+6. **TradeProvider**: Provides trading functionality and state
 
 ## Detailed Provider Descriptions
 
@@ -227,65 +223,6 @@ function PositionsSummary() {
       <p>Total profit: {totalProfit.toFixed(2)}</p>
       <button onClick={() => handleFilterChange({ status: 'open' })}>
         Show open positions
-      </button>
-    </div>
-  );
-}
-```
-
-### ProcessingStackProvider
-
-**Purpose**: Manages processing states, loading indicators, and notifications.
-
-**Implementation Details**:
-- Wraps the `ProcessingStackContext` from `../contexts/ProcessingStackContext`
-- Tracks ongoing processes and their states
-- Provides methods for adding, updating, and removing processes
-- Handles success and error notifications
-
-**Key Features**:
-- Centralized loading state management
-- Process queue management
-- Toast notifications for process completion/failure
-- Process timeout handling
-
-**Usage Example**:
-```tsx
-import { useProcessingStack } from '../contexts/ProcessingStackContext';
-
-function DataFetchingComponent() {
-  const { addProcess, removeProcess, isProcessing } = useProcessingStack();
-  
-  const fetchData = async () => {
-    const processId = addProcess({ 
-      type: 'data-fetch', 
-      message: 'Fetching data...' 
-    });
-    
-    try {
-      const result = await apiService.getData();
-      removeProcess(processId, { 
-        success: true, 
-        message: 'Data fetched successfully' 
-      });
-      return result;
-    } catch (error) {
-      removeProcess(processId, { 
-        success: false, 
-        message: 'Failed to fetch data', 
-        error 
-      });
-      throw error;
-    }
-  };
-  
-  return (
-    <div>
-      <button 
-        onClick={fetchData} 
-        disabled={isProcessing('data-fetch')}
-      >
-        {isProcessing('data-fetch') ? 'Loading...' : 'Fetch Data'}
       </button>
     </div>
   );

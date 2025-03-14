@@ -73,7 +73,6 @@ BotsPage
 - `Bots` component for displaying the list of bots
 - `BotCard` for individual bot display
 - `StrategyForm` for configuring bot strategies
-- `ProcessingStack` for handling loading states and notifications
 
 **State Management**:
 - Uses contexts for bot data and execution status

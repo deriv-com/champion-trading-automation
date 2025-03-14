@@ -79,26 +79,6 @@ function MyComponent() {
 }
 ```
 
-### ProcessingStackContext
-
-Manages processing states, loading indicators, and notifications.
-
-**Key Features:**
-- Tracks ongoing processes and their states
-- Provides methods for adding, updating, and removing processes
-- Handles success and error notifications
-
-**Usage:**
-```tsx
-import { useProcessingStack } from '../contexts/ProcessingStackContext';
-
-function MyComponent() {
-  const { addProcess, removeProcess, isProcessing } = useProcessingStack();
-  
-  // Use processing stack methods
-}
-```
-
 ### SSEContext
 
 Manages Server-Sent Events (SSE) connections and data.
