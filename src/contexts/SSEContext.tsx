@@ -35,7 +35,7 @@ export function SSEProvider({ children }: { children: ReactNode }) {
     connectionRef.current = true;
 
     const handlers = sseService.connect({
-      url: `${import.meta.env.VITE_API_URL}/api/v2/sse`,
+      url: `${import.meta.env.VITE_API_URL}/sse`,
       headers: {
         loginid: String(authorizeResponse.authorize.loginid || ''),
         authorize: String(authParams?.token1 || ''),
