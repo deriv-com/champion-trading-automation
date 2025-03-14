@@ -88,6 +88,7 @@
   
   &__run-btn {
     background-color: #4CAF50; /* Green color */
+    color: #fff;
     border: none;
     border-radius: 20px;
     padding: 6px 20px;
@@ -125,6 +126,105 @@
     &__strategy-tag, &__param-value, &__run-btn {
       padding: 8px 20px;
       font-size: 16px;
+    }
+  }
+}
+
+.bot-action-options {
+  padding: 16px 0;
+  
+  .bot-action-option {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-radius: 8px;
+    
+    &:hover {
+      background-color: var(--bg-elevated);
+    }
+    
+    .bot-action-icon {
+      margin-right: 14px;
+      fill: var(--text-primary);
+    }
+  }
+}
+
+.bot-delete-confirmation {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color: var(--bg-primary);
+  border-radius: 16px 16px 0 0;
+  height: 100%;
+  
+  &__handle {
+    display: flex;
+    justify-content: center;
+    padding: 8px 0;
+    width: 100%;
+  }
+  
+  &__title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 16px 0;
+    color: var(--text-primary);
+  }
+  
+  &__message {
+    font-size: 14px;
+    color: var(--text-primary);
+    margin: 0 24px 8px;
+    line-height: 1.5;
+  }
+  
+  &__question {
+    font-size: 14px;
+    color: var(--text-primary);
+    margin: 8px 24px 32px;
+  }
+  
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    padding: 0 24px;
+    
+    button {
+      height: 48px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .modal-btn {
+      &.bot-delete-confirmation__confirm {
+        background-color: var(--modal-btn-primary);
+        border-color: var(--modal-btn-primary);
+        color: var(--modal-btn-primary-text);
+        
+        &:hover {
+          background-color: var(--modal-btn-primary);
+          opacity: 0.85;
+        }
+      }
+      
+      &.bot-delete-confirmation__cancel {
+        background-color: var(--modal-btn-secondary);
+        border: 1px solid var(--border-color);
+        color: var(--modal-btn-secondary-text);
+        
+        &:hover {
+          background-color: var(--hover-bg);
+          border-color: var(--border-color);
+        }
+      }
     }
   }
 }

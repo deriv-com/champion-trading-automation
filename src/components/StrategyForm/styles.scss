@@ -16,8 +16,11 @@
   .header-left {
     .back-button {
       padding: 0;
+      width: 36px;
+      height: 36px;
       border: none;
-      font-size: 20px;
+      background-color: var(--hover-bg);
+      border-radius: 20px;
 
       svg {
         fill: var(--text-primary);
@@ -43,8 +46,6 @@
       }
 
       .question-icon {
-        font-size: 16px;
-        font-weight: 500;
         color: var(--text-secondary);
       }
 
@@ -173,6 +174,43 @@
 // Market Selector Modal
 .ant-modal {
   z-index: 1050 !important; // Ensure modal is above other overlays
+}
+
+// Confirmation Dialog
+.confirmation-dialog {
+  .confirmation-content {
+    padding: 0 20px;
+
+    h2 {
+      font-size: 24px;
+      text-align: center;
+      margin: 20px 0;
+      color: var(--text-primary);
+    }
+
+    p {
+      text-align: center;
+      color: var(--text-secondary);
+      margin: 20px 0 30px;
+    }
+
+    .confirmation-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-bottom: 20px;
+
+      .ant-btn {
+        height: 48px;
+        border-radius: 24px;
+
+        &.confirm-button {
+          background-color: #1e222d;
+          border-color: #1e222d;
+        }
+      }
+    }
+  }
 }
 
 .market-selector-list {
