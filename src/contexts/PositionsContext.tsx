@@ -1,3 +1,47 @@
+/**
+ * @file: PositionsContext.tsx
+ * @description: React context provider for managing trading positions,
+ *               including fetching, updating, and closing positions with
+ *               real-time updates via SSE.
+ *
+ * @components:
+ *   - PositionsContext: React context for positions state
+ *   - PositionsProvider: Provider component that manages positions state
+ *   - usePositions: Custom hook for consuming positions context
+ *   - positionsReducer: Reducer function for state management
+ * @dependencies:
+ *   - React: createContext, useContext, useEffect, useCallback, useReducer
+ *   - types/trade: TradeInfo type definition
+ *   - services/trade/tradeService: Service for trade API operations
+ *   - SSEContext: For real-time position updates
+ * @usage:
+ *   // Wrap components that need positions data
+ *   <PositionsProvider>
+ *     <YourComponent />
+ *   </PositionsProvider>
+ *
+ *   // Use positions data in components
+ *   const { state, closePosition } = usePositions();
+ *   const positions = Object.values(state.trades);
+ *
+ *   // Close a position
+ *   const handleClose = (sessionId) => closePosition(sessionId);
+ *
+ * @architecture: Context Provider with reducer pattern for state management
+ * @relationships:
+ *   - Used by: Positions component and other trading components
+ *   - Depends on: SSEContext for real-time updates
+ *   - Uses: tradeService for API operations
+ * @dataFlow:
+ *   - Initial load: Fetches positions from API via tradeService
+ *   - Updates: Receives real-time updates via SSE
+ *   - Actions: Provides methods to fetch and close positions
+ *
+ * @ai-hints: This context uses a reducer pattern for more complex state management.
+ *            It maintains positions in a map keyed by session_id for efficient updates
+ *            and tracks when each position was last updated. It relies on SSE for
+ *            real-time updates rather than polling.
+ */
 import React, { createContext, useContext, useEffect, useCallback, useReducer } from 'react';
 import { TradeInfo } from '../types/trade';
 import { tradeService } from '../services/trade/tradeService';

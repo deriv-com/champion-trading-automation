@@ -1,3 +1,35 @@
+/**
+ * @file: Positions/index.tsx
+ * @description: Component for displaying and managing trading positions,
+ *               including filtering, sorting, and position management.
+ *
+ * @components:
+ *   - Positions: Main component for positions display
+ *   - TradeFilters: Sub-component for filtering positions
+ *   - TradeGrid: Sub-component for displaying position data in a grid
+ * @dependencies:
+ *   - React: Core functionality and hooks
+ *   - antd: UI components (Alert, Spin, Typography)
+ *   - contexts/PositionsContext: Trading positions data and actions
+ *   - types/positions: Position-related type definitions
+ * @usage:
+ *   <Positions />
+ *
+ * @architecture: Container component with filtering and child components
+ * @relationships:
+ *   - Parent: PositionsPage
+ *   - Children: TradeFilters, TradeGrid
+ *   - Context: Uses PositionsContext for data and actions
+ * @dataFlow:
+ *   - Input: Trading positions from PositionsContext
+ *   - Processing: Filtering and sorting based on user selections
+ *   - Output: Filtered positions display and position management actions
+ *
+ * @ai-hints: This component handles the display logic for trading positions,
+ *            including filtering, sorting, and empty state handling. It uses
+ *            the PositionsContext to fetch and manage position data, with
+ *            optimizations to prevent redundant API calls.
+ */
 import React, { useState, useEffect, useRef } from 'react';
 import { Alert, Spin, Typography } from 'antd';
 import { SwapOutlined } from '@ant-design/icons';

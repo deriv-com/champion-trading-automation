@@ -1,3 +1,40 @@
+/**
+ * @file: sseService.ts
+ * @description: Service for managing Server-Sent Events (SSE) connections with
+ *               custom implementation for better control and error handling.
+ *
+ * @components:
+ *   - CustomEventSource: Custom implementation of EventSource with enhanced features
+ *   - SSEServiceImpl: Singleton service implementing the SSEService interface
+ *   - sseService: Exported singleton instance
+ * @dependencies:
+ *   - types/sse: SSEOptions and SSEService interface definitions
+ * @usage:
+ *   // Connect to an SSE endpoint
+ *   sseService.connect({
+ *     url: 'https://api.example.com/events',
+ *     headers: { 'Authorization': 'Bearer token' },
+ *     onMessage: (event) => console.log(JSON.parse(event.data)),
+ *     withCredentials: true
+ *   });
+ *
+ *   // Disconnect from SSE
+ *   sseService.disconnect();
+ *
+ * @architecture: Singleton service with custom EventSource implementation
+ * @relationships:
+ *   - Used by: useSSE hook, balance streaming services
+ *   - Related to: WebSocket service for real-time communication
+ * @dataFlow:
+ *   - Connection: Establishes fetch-based SSE connection with headers
+ *   - Processing: Parses incoming SSE data and dispatches to handlers
+ *   - Management: Handles connection lifecycle and error recovery
+ *
+ * @ai-hints: This service uses a custom implementation of EventSource based on
+ *            the Fetch API and ReadableStream for better control over headers,
+ *            credentials, and connection management. It supports multiple message
+ *            handlers and connection reuse.
+ */
 import { SSEOptions, SSEService } from '../../types/sse';
 
 class CustomEventSource {

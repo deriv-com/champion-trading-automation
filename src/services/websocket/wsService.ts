@@ -1,3 +1,41 @@
+/**
+ * @file: wsService.ts
+ * @description: WebSocket service for managing real-time bidirectional communication
+ *               with the trading API, handling connection lifecycle and message processing.
+ *
+ * @components:
+ *   - WebSocketService: Singleton class implementing WebSocket functionality
+ *   - wsService: Exported singleton instance
+ *   - MessageHandler: Type definition for message handling callbacks
+ * @dependencies:
+ *   - types/websocket: WebSocketResponse and WebSocketRequest types
+ *   - services/config/configService: For retrieving configuration values
+ * @usage:
+ *   // Connect to WebSocket with message handler
+ *   wsService.connect((data) => {
+ *     console.log('Received message:', data);
+ *   });
+ *
+ *   // Send a message
+ *   wsService.send({ authorize: 'TOKEN123' });
+ *
+ *   // Check connection status
+ *   const isConnected = wsService.isConnected();
+ *
+ * @architecture: Singleton service with WebSocket connection management
+ * @relationships:
+ *   - Used by: useWebSocket hook, App component for authentication
+ *   - Related to: SSE service for real-time updates
+ * @dataFlow:
+ *   - Connection: Establishes WebSocket connection with authentication
+ *   - Messaging: Sends requests and processes responses
+ *   - Lifecycle: Manages connection state and keep-alive pings
+ *
+ * @ai-hints: This service implements the Singleton pattern and includes automatic
+ *            ping/keep-alive functionality. It handles connection state management
+ *            and message parsing with error handling. The service adds request IDs
+ *            to outgoing messages for tracking.
+ */
 import { WebSocketResponse, WebSocketRequest } from '../../types/websocket';
 import { configService } from '../config/configService';
 

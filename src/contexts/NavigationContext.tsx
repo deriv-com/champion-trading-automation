@@ -1,3 +1,41 @@
+/**
+ * @file: NavigationContext.tsx
+ * @description: React context provider for managing navigation state,
+ *               including active tab tracking and tab switching functionality.
+ *
+ * @components:
+ *   - NavigationContext: React context for navigation state
+ *   - NavigationProvider: Provider component that manages navigation state
+ *   - useNavigation: Custom hook for consuming navigation context
+ *   - NavigationTab: Type definition for valid navigation tabs
+ * @dependencies:
+ *   - React: createContext, useContext, useState
+ * @usage:
+ *   // Wrap components that need navigation state
+ *   <NavigationProvider>
+ *     <App />
+ *   </NavigationProvider>
+ *
+ *   // Use navigation state in components
+ *   const { activeTab, setActiveTab } = useNavigation();
+ *   console.log(`Current tab: ${activeTab}`);
+ *
+ *   // Switch to a different tab
+ *   setActiveTab('positions');
+ *
+ * @architecture: Context Provider pattern with simple state management
+ * @relationships:
+ *   - Used by: Navigation component, App component
+ *   - Related to: Router for URL-based navigation
+ * @dataFlow:
+ *   - State: Tracks the currently active navigation tab
+ *   - Updates: Tab changes through setActiveTab function
+ *   - Consumption: Components read activeTab to determine UI state
+ *
+ * @ai-hints: This context provides a centralized way to manage navigation state
+ *            across the application. It uses a type-safe approach with the
+ *            NavigationTab type to ensure only valid tabs can be selected.
+ */
 import { createContext, useContext, useState, ReactNode } from 'react';
 
 export type NavigationTab = 'discover' | 'bots' | 'positions' | 'menu';

@@ -1,3 +1,42 @@
+/**
+ * @file: SSEContext.tsx
+ * @description: React context provider for Server-Sent Events (SSE) connection management,
+ *               handling authentication, connection state, and message processing.
+ *
+ * @components:
+ *   - SSEContext: React context for SSE state
+ *   - SSEProvider: Provider component that manages SSE connection
+ *   - useSSEContext: Custom hook for consuming SSE context
+ * @dependencies:
+ *   - React: createContext, useContext, useState, useEffect, useRef
+ *   - sseService: Service for SSE connection handling
+ *   - types/sse: SSEMessage type definition
+ *   - AuthContext: For authentication data needed for SSE connection
+ * @usage:
+ *   // Wrap components that need SSE data
+ *   <SSEProvider>
+ *     <YourComponent />
+ *   </SSEProvider>
+ *
+ *   // Use SSE data in components
+ *   const { isConnected, lastMessage } = useSSEContext();
+ *   console.log(`Connection status: ${isConnected ? 'Connected' : 'Disconnected'}`);
+ *
+ * @architecture: Context Provider pattern with connection lifecycle management
+ * @relationships:
+ *   - Used by: Components needing real-time updates
+ *   - Depends on: AuthContext for authentication data
+ *   - Uses: sseService for actual SSE connection
+ * @dataFlow:
+ *   - Authentication: Uses auth data to establish authenticated SSE connection
+ *   - Connection: Manages connection lifecycle and state
+ *   - Messages: Processes incoming SSE messages and updates context state
+ *
+ * @ai-hints: This context handles the SSE connection lifecycle based on authentication
+ *            state. It processes messages including heartbeats for connection monitoring
+ *            and avoids disconnecting when multiple components might be using the
+ *            connection. It uses a ref to track connection state across renders.
+ */
 import { createContext, useContext, useEffect, useState, useRef, ReactNode } from 'react';
 import { sseService } from '../services/sse/sseService';
 import { SSEMessage } from '../types/sse';

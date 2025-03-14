@@ -1,3 +1,35 @@
+/**
+ * @file: apiService.ts
+ * @description: Centralized API service that handles HTTP requests with Axios,
+ *               including request/response interceptors, authentication, and error handling.
+ *
+ * @components:
+ *   - ApiService class: Singleton service for HTTP requests
+ *   - apiService export: Singleton instance
+ * @dependencies:
+ *   - axios: HTTP client library
+ *   - API_CONFIG: Configuration for API endpoints and settings
+ *   - authStore: Authentication state store for headers
+ * @usage:
+ *   // GET request
+ *   const data = await apiService.get<ResponseType>('/endpoint', { param: 'value' });
+ *
+ *   // POST request
+ *   const result = await apiService.post<ResponseType>('/endpoint', { data: 'value' });
+ *
+ * @architecture: Singleton pattern with interceptors and generic request methods
+ * @relationships:
+ *   - Used by: Various services and components that need API access
+ *   - Depends on: authStore for authentication headers
+ * @dataFlow:
+ *   - Input: Request parameters, data, and headers
+ *   - Processing: Adds auth headers, logs requests/responses, handles errors
+ *   - Output: Typed response data or error rejection
+ *
+ * @ai-hints: This service implements the Singleton pattern to ensure a single
+ *            instance is used throughout the application. All HTTP methods are
+ *            typed with generics for type-safe responses.
+ */
 import axios, { AxiosInstance, AxiosError, AxiosResponse, RawAxiosRequestHeaders } from 'axios';
 import { API_CONFIG } from '../../config/api.config';
 import { authStore } from '../../stores/authStore';

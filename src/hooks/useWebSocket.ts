@@ -1,3 +1,42 @@
+/**
+ * @file: useWebSocket.ts
+ * @description: Custom React hook for WebSocket communication with automatic
+ *               connection management, message handling, and connection status tracking.
+ *
+ * @components:
+ *   - useWebSocket: Main hook for WebSocket functionality
+ *   - WebSocketMessage: Interface for typed WebSocket messages
+ *   - UseWebSocketOptions: Configuration options interface
+ * @dependencies:
+ *   - React hooks: useEffect, useCallback, useState
+ *   - wsService: Service for WebSocket connection handling
+ * @usage:
+ *   const { isConnected, send, connect, disconnect } = useWebSocket<ResponseType>({
+ *     onMessage: (data) => console.log(data),
+ *     autoConnect: true
+ *   });
+ *
+ *   // Send a message when connected
+ *   useEffect(() => {
+ *     if (isConnected) {
+ *       send({ action: 'subscribe', topic: 'prices' });
+ *     }
+ *   }, [isConnected, send]);
+ *
+ * @architecture: Custom React hook with connection lifecycle management
+ * @relationships:
+ *   - Uses: wsService for actual WebSocket communication
+ *   - Used by: Components and other hooks needing WebSocket functionality
+ * @dataFlow:
+ *   - Input: Configuration options and message payloads
+ *   - Processing: Connection management and message handling
+ *   - Output: Connection status and control functions
+ *
+ * @ai-hints: This hook uses React's useCallback for memoized functions and
+ *            useEffect for connection lifecycle management. It's generic-typed
+ *            to support different message data structures and includes automatic
+ *            connection status tracking.
+ */
 import { useEffect, useCallback, useState } from 'react';
 import { wsService } from '../services/websocket/wsService';
 

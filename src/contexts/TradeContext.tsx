@@ -1,5 +1,54 @@
+/**
+ * @file: TradeContext.tsx
+ * @description: React context provider for managing trade execution and state,
+ *               supporting multiple trading strategies and session tracking.
+ *
+ * @components:
+ *   - TradeContext: React context for trade state
+ *   - TradeProvider: Provider component that manages trade state
+ *   - useTrade: Custom hook for consuming trade context
+ *   - TradeSession: Interface for trade session data structure
+ * @dependencies:
+ *   - React: createContext, useContext, useState
+ *   - types/trade: TradeStatusEnum, TradeStrategy, TradeStatus
+ *   - types/form: FormValues for trade parameters
+ *   - services/trade/tradeService: Service for executing trades
+ * @usage:
+ *   // Wrap components that need trade functionality
+ *   <TradeProvider>
+ *     <YourComponent />
+ *   </TradeProvider>
+ *
+ *   // Use trade functionality in components
+ *   const { submitTrade, isSubmitting } = useTrade();
+ *
+ *   // Submit a trade
+ *   const handleSubmit = async (values) => {
+ *     try {
+ *       const sessionId = await submitTrade(values, TradeStrategy.REPEAT);
+ *       console.log(`Trade submitted with session ID: ${sessionId}`);
+ *     } catch (error) {
+ *       console.error('Trade submission failed:', error);
+ *     }
+ *   };
+ *
+ * @architecture: Context Provider with complex state management
+ * @relationships:
+ *   - Used by: Trading form components
+ *   - Related to: PositionsContext for tracking active positions
+ * @dataFlow:
+ *   - Input: Trade parameters from form submissions
+ *   - Processing: Trade execution via tradeService
+ *   - State: Tracks trade sessions by strategy and session ID
+ *
+ * @ai-hints: This context manages trade execution state with a nested structure
+ *            organized by strategy and session ID. It handles the complete lifecycle
+ *            of trade submissions including pending, active, and error states.
+ *            The state structure allows tracking multiple concurrent trades across
+ *            different strategies.
+ */
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { 
+import {
   TradeStatusEnum, TradeStrategy, TradeStatus
 } from '../types/trade';
 import { FormValues } from '../types/form';

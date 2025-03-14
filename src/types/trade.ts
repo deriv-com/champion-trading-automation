@@ -1,3 +1,35 @@
+/**
+ * @file: trade.ts
+ * @description: Type definitions for trading functionality, including trade requests,
+ *               trade status tracking, contract types, and trading strategies.
+ *
+ * @components:
+ *   - Interfaces: CommonTradeParams, RepeatTradeRequest, ThresholdTradeRequest,
+ *                MartingaleTradeRequest, TradeContract, TradeInfo, TradeStatus, TradeError
+ *   - Enums: TradeStatusEnum, ContractType, TradeStrategy
+ * @dependencies:
+ *   - form.ts: FormValues type for form data integration
+ * @usage:
+ *   // Creating a trade request
+ *   const request: RepeatTradeRequest = {
+ *     proposal: 1,
+ *     basis: 'stake',
+ *     amount: 100,
+ *     symbol: 'EURUSD',
+ *     growth_rate: 0.05,
+ *     number_of_trades: 5
+ *   };
+ *
+ * @architecture: Type hierarchy with common base types and specialized extensions
+ * @relationships:
+ *   - Used by: Trading services, components, and forms
+ *   - Extends: FormValues from form.ts
+ * @dataFlow: These types define the structure of data flowing through the trading system
+ *
+ * @ai-hints: The trading system supports three main strategy types: Repeat, Threshold,
+ *            and Martingale, each with their own specific parameters extending from
+ *            the CommonTradeParams base interface.
+ */
 import { FormValues } from "./form";
 
 // Trade request types

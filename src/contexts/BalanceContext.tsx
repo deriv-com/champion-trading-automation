@@ -1,3 +1,42 @@
+/**
+ * @file: BalanceContext.tsx
+ * @description: React context provider for managing user balance data,
+ *               including fetching, updating, and providing balance information
+ *               throughout the application.
+ *
+ * @components:
+ *   - BalanceContext: React context for balance state
+ *   - BalanceProvider: Provider component that manages balance state
+ *   - useBalance: Custom hook for consuming balance context
+ * @dependencies:
+ *   - React: createContext, useContext, useState
+ *   - types/balance: BalanceData type definition
+ *   - services/balance/balanceService: Service for fetching balance data
+ * @usage:
+ *   // Wrap components that need balance data
+ *   <BalanceProvider>
+ *     <YourComponent />
+ *   </BalanceProvider>
+ *
+ *   // Use balance data in components
+ *   const { balanceData, refreshBalance } = useBalance();
+ *   console.log(`Current balance: ${balanceData.balance} ${balanceData.currency}`);
+ *
+ * @architecture: Context Provider pattern with state management
+ * @relationships:
+ *   - Used by: Header component, trading components
+ *   - Uses: balanceService for fetching initial balance
+ *   - Updated by: SSE balance updates
+ * @dataFlow:
+ *   - Initial load: Fetches balance from API via balanceService
+ *   - Updates: Receives balance updates from SSE or manual refresh
+ *   - Consumption: Provides balance data to components via context
+ *
+ * @ai-hints: This context maintains balance state with default values to avoid
+ *            null checks. It includes optimizations to only update state when
+ *            balance actually changes and provides both manual refresh and
+ *            update methods.
+ */
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { BalanceData } from '../types/balance';
 import { balanceService } from '../services/balance/balanceService';

@@ -1,3 +1,31 @@
+/**
+ * @file: api.config.ts
+ * @description: Configuration constants for API endpoints, WebSocket connections,
+ *               and event types used throughout the application.
+ *
+ * @components:
+ *   - API_CONFIG: Core API configuration settings
+ *   - API_ENDPOINTS: API endpoint paths
+ *   - WS_EVENTS: WebSocket event type constants
+ * @dependencies:
+ *   - Vite environment variables (import.meta.env)
+ * @usage:
+ *   // Access API configuration
+ *   import { API_CONFIG, API_ENDPOINTS } from '../config/api.config';
+ *
+ *   const apiUrl = API_CONFIG.BASE_URL + API_ENDPOINTS.BALANCE;
+ *   const timeout = API_CONFIG.TIMEOUT;
+ *
+ * @architecture: Constants module pattern
+ * @relationships:
+ *   - Used by: API services, WebSocket services, SSE services
+ *   - Related to: Environment configuration (.env files)
+ * @dataFlow: Provides configuration constants to services that interact with APIs
+ *
+ * @ai-hints: This file centralizes all API-related configuration to avoid
+ *            hardcoded values throughout the codebase. Environment variables
+ *            are accessed through Vite's import.meta.env.
+ */
 export const API_CONFIG = {
   BASE_URL: import.meta.env.VITE_API_URL,
   WS_URL: import.meta.env.VITE_WS_URL,
