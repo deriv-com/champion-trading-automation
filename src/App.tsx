@@ -5,6 +5,9 @@ import { oauthService } from "./services/oauth/oauthService";
 import { useWebSocket } from "./hooks/useWebSocket";
 import { useAuth } from "./contexts/AuthContext";
 import { useNavigation } from "./contexts/NavigationContext";
+import { useBalance } from "./contexts/BalanceContext";
+import { useBalanceSSE } from "./hooks/useBalanceSSE";
+import { balanceService } from "./services/balance/balanceService";
 import { AuthorizeResponse } from "./types/auth";
 import { Navigation } from "./components/Navigation";
 import { Header } from "./components/Header";
@@ -43,11 +46,18 @@ function MainContent() {
  */
 function MainApp() {
   const { authParams, setAuthParams, setAuthorizeResponse } = useAuth();
-
+  const { balanceData } = useBalance();
+  
+  // Initialize balance SSE connection and get the connection status
+  const { balanceData: sseBalanceData } = useBalanceSSE();
 
   const accountType = "Real";
-  const balance = "10,000.00";
-  const currency = "USD";
+  
+  // Prefer SSE balance data if available, otherwise fall back to context data
+  const effectiveBalanceData = sseBalanceData || balanceData;
+  
+  const balance = balanceService.formatBalance(effectiveBalanceData?.balance || "0.00");
+  const currency = effectiveBalanceData?.currency || "USD";
   const { send, isConnected, connect } = useWebSocket<AuthorizeResponse>({
     onMessage: (response) => {
       if (response.msg_type === "authorize" && response.authorize) {

@@ -283,6 +283,7 @@ export function Settings() {
             </div>
           </div>
 
+
           {/* Log out */}
           {userInfo && (
             <div

@@ -7,6 +7,7 @@ import { NavigationProvider } from "../contexts/NavigationContext";
 import { TradeProvider } from "../contexts/TradeContext";
 import { PositionsProvider } from "../contexts/PositionsContext";
 import { NotificationProvider } from "../contexts/NotificationContext";
+import { BalanceProvider } from '../contexts/BalanceContext';
 
 interface AppProvidersProps {
   children: ReactNode;
@@ -31,7 +32,8 @@ export function AppProviders({ children }: AppProvidersProps) {
   return (
     <AuthProvider>
       <SSEProvider>
-        <ThemeProvider>
+       <BalanceProvider>
+         <ThemeProvider>
           <ThemeConfigProvider>
             <NotificationProvider>
               <NavigationProvider>
@@ -42,6 +44,7 @@ export function AppProviders({ children }: AppProvidersProps) {
             </NotificationProvider>
           </ThemeConfigProvider>
         </ThemeProvider>
+       </BalanceProvider>
       </SSEProvider>
     </AuthProvider>
   );
