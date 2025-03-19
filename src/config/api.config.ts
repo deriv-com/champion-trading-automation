@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_URL.replace('/champion/v1', ''),
+  BASE_URL: 'https://champion.mobile-bot.deriv.dev/',
   WS_URL: import.meta.env.VITE_WS_URL,
   TIMEOUT: 30000, // 30 seconds
   RETRY_ATTEMPTS: 3,

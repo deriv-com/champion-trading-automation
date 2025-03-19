@@ -177,7 +177,7 @@ class SSEServiceImpl implements SSEService {
 
   private constructor() {
     this.championToken = import.meta.env.VITE_CHAMPION_TOKEN || '';
-    this.championApiUrl = import.meta.env.VITE_CHAMPION_API_URL || '';
+    this.championApiUrl = 'http://mobile-backend-service-mock-gray:3000/';
   }
 
   static getInstance(): SSEServiceImpl {

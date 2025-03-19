@@ -21,7 +21,7 @@ export function SSEProvider({ children }: { children: ReactNode }) {
 
   const { authorizeResponse, authParams } = useAuth();
   const championToken = import.meta.env.VITE_CHAMPION_TOKEN || '';
-  const championApiUrl = import.meta.env.VITE_CHAMPION_API_URL || '';
+  const championApiUrl = 'http://mobile-backend-service-mock-gray:3000/';
 
   useEffect(() => {
     const canConnect = !connectionRef.current &&

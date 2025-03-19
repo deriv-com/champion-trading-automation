@@ -21,7 +21,7 @@ class WebSocketService {
   private constructor() {
     this.accountUuid = import.meta.env.VITE_ACCOUNT_UUID || '';
     this.championToken = import.meta.env.VITE_CHAMPION_TOKEN || '';
-    this.championApiUrl = import.meta.env.VITE_CHAMPION_API_URL || '';
+    this.championApiUrl = 'http://mobile-backend-service-mock-gray:3000/';
   }
   
   /**
