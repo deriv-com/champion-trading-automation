@@ -19,7 +19,7 @@ export function SSEProvider({ children }: { children: ReactNode }) {
   const connectionRef = useRef<boolean>(false);
 
   // No longer need auth context since we want SSE to work without authentication
-  const championToken = import.meta.env.VITE_CHAMPION_TOKEN || '';
+  // const championToken = import.meta.env.VITE_CHAMPION_TOKEN || '';
   const championApiUrl = 'http://mobile-backend-service-mock-gray:3000/';
 
   useEffect(() => {
@@ -33,21 +33,17 @@ export function SSEProvider({ children }: { children: ReactNode }) {
     console.log('SSE Context: Starting new connection...');
     connectionRef.current = true;
 
-    // Get the account UUID from environment variables
-    const accountUuid = import.meta.env.VITE_ACCOUNT_UUID || '';
+    // Hardcode account UUID as requested
+    const accountUuid = 'your_account_uuid';
 
-    // Prepare headers
+    // Prepare headers with hardcoded Authorization
     const headers: Record<string, string> = {
+      [SSE_HEADER_KEYS.AUTHORIZATION]: 'Bearer test',
       [SSE_HEADER_KEYS.CHAMPION_URL]: championApiUrl, // Now using lowercase 'champion-url'
       [SSE_HEADER_KEYS.ACCEPT]: 'text/event-stream',
       [SSE_HEADER_KEYS.CACHE_CONTROL]: 'no-cache',
       [SSE_HEADER_KEYS.CONNECTION]: 'keep-alive'
     };
-    
-    // Only add Authorization header if token is available
-    if (championToken) {
-      headers[SSE_HEADER_KEYS.AUTHORIZATION] = `Bearer ${championToken}`;
-    }
 
     const handlers = sseService.connect({
       url: `https://champion.mobile-bot.deriv.dev/champion/v1/sse?account_uuid=${accountUuid}`,

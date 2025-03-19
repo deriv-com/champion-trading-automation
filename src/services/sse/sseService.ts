@@ -172,11 +172,11 @@ class SSEServiceImpl implements SSEService {
   private messageHandlers: Set<(event: MessageEvent) => void> = new Set();
   private lastOptions: SSEOptions | null = null;
   private isConnecting: boolean = false;
-  private championToken: string;
+  // private championToken: string;
   private championApiUrl: string;
 
   private constructor() {
-    this.championToken = import.meta.env.VITE_CHAMPION_TOKEN || '';
+    // this.championToken = import.meta.env.VITE_CHAMPION_TOKEN || '';
     this.championApiUrl = 'http://mobile-backend-service-mock-gray:3000/';
   }
 
@@ -188,19 +188,15 @@ class SSEServiceImpl implements SSEService {
   }
 
   connect(options: SSEOptions): number {
-    // Add champion-specific headers
+    // Add champion-specific headers with hardcoded Authorization
     const enhancedHeaders: SSEHeaders = {
       ...options.headers,
+      [SSE_HEADER_KEYS.AUTHORIZATION]: 'Bearer test',
       [SSE_HEADER_KEYS.CHAMPION_URL]: this.championApiUrl, // Now using lowercase 'champion-url'
       [SSE_HEADER_KEYS.ACCEPT]: 'text/event-stream',
       [SSE_HEADER_KEYS.CACHE_CONTROL]: 'no-cache',
       [SSE_HEADER_KEYS.CONNECTION]: 'keep-alive'
     };
-    
-    // Only add Authorization header if token is available
-    if (this.championToken) {
-      enhancedHeaders[SSE_HEADER_KEYS.AUTHORIZATION] = `Bearer ${this.championToken}`;
-    }
 
     const enhancedOptions = {
       ...options,
