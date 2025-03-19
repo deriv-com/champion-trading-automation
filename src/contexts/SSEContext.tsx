@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState, useRef, ReactNode } from 'react';
 import { sseService } from '../services/sse/sseService';
 import { SSEMessage, SSE_HEADER_KEYS } from '../types/sse';
-import { useAuth } from './AuthContext';
 
 interface SSEContextType {
   isConnected: boolean;
@@ -19,14 +18,12 @@ export function SSEProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const connectionRef = useRef<boolean>(false);
 
-  const { authorizeResponse, authParams } = useAuth();
+  // No longer need auth context since we want SSE to work without authentication
   const championToken = import.meta.env.VITE_CHAMPION_TOKEN || '';
   const championApiUrl = 'http://mobile-backend-service-mock-gray:3000/';
 
   useEffect(() => {
-    const canConnect = !connectionRef.current &&
-      championToken &&
-      championApiUrl;
+    const canConnect = !connectionRef.current && championApiUrl;
 
     if (!canConnect) {
       console.log('SSE Context: Cannot connect, missing required parameters');
@@ -39,15 +36,22 @@ export function SSEProvider({ children }: { children: ReactNode }) {
     // Get the account UUID from environment variables
     const accountUuid = import.meta.env.VITE_ACCOUNT_UUID || '';
 
+    // Prepare headers
+    const headers: Record<string, string> = {
+      [SSE_HEADER_KEYS.CHAMPION_URL]: championApiUrl, // Now using lowercase 'champion-url'
+      [SSE_HEADER_KEYS.ACCEPT]: 'text/event-stream',
+      [SSE_HEADER_KEYS.CACHE_CONTROL]: 'no-cache',
+      [SSE_HEADER_KEYS.CONNECTION]: 'keep-alive'
+    };
+    
+    // Only add Authorization header if token is available
+    if (championToken) {
+      headers[SSE_HEADER_KEYS.AUTHORIZATION] = `Bearer ${championToken}`;
+    }
+
     const handlers = sseService.connect({
       url: `https://champion.mobile-bot.deriv.dev/champion/v1/sse?account_uuid=${accountUuid}`,
-      headers: {
-        [SSE_HEADER_KEYS.AUTHORIZATION]: `Bearer ${championToken}`,
-        [SSE_HEADER_KEYS.CHAMPION_URL]: championApiUrl, // Now using lowercase 'champion-url'
-        [SSE_HEADER_KEYS.ACCEPT]: 'text/event-stream',
-        [SSE_HEADER_KEYS.CACHE_CONTROL]: 'no-cache',
-        [SSE_HEADER_KEYS.CONNECTION]: 'keep-alive'
-      },
+      headers,
       onMessage: (event) => {
         if (!connectionRef.current) return;
 
@@ -95,7 +99,7 @@ export function SSEProvider({ children }: { children: ReactNode }) {
         console.log('SSE Context: Cleanup complete');
       }
     };
-  }, [authorizeResponse, championToken, championApiUrl, authParams]); // Add dependencies
+  }, [championApiUrl]); // Only depend on API URL, not authentication
 
   const value = {
     isConnected,

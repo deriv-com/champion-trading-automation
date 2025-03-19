@@ -1,4 +1,4 @@
-import { SSEOptions, SSEService, SSE_HEADER_KEYS } from '../../types/sse';
+import { SSEOptions, SSEService, SSE_HEADER_KEYS, SSEHeaders } from '../../types/sse';
 
 class CustomEventSource {
   private abortController: AbortController | null = null;
@@ -189,14 +189,18 @@ class SSEServiceImpl implements SSEService {
 
   connect(options: SSEOptions): number {
     // Add champion-specific headers
-    const enhancedHeaders = {
+    const enhancedHeaders: SSEHeaders = {
       ...options.headers,
-      [SSE_HEADER_KEYS.AUTHORIZATION]: `Bearer ${this.championToken}`,
       [SSE_HEADER_KEYS.CHAMPION_URL]: this.championApiUrl, // Now using lowercase 'champion-url'
       [SSE_HEADER_KEYS.ACCEPT]: 'text/event-stream',
       [SSE_HEADER_KEYS.CACHE_CONTROL]: 'no-cache',
       [SSE_HEADER_KEYS.CONNECTION]: 'keep-alive'
     };
+    
+    // Only add Authorization header if token is available
+    if (this.championToken) {
+      enhancedHeaders[SSE_HEADER_KEYS.AUTHORIZATION] = `Bearer ${this.championToken}`;
+    }
 
     const enhancedOptions = {
       ...options,
