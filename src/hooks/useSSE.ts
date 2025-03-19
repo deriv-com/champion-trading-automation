@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useState } from 'react';
 import { sseService } from '../services/sse/sseService';
-import { SSEHeaders } from '../types/sse';
+import { SSEHeaders, SSE_HEADER_KEYS } from '../types/sse';
 
 interface UseSSEOptions<T> {
   url: string;
@@ -38,9 +38,19 @@ export function useSSE<T = any>(
   }, [onMessage]);
 
   const connect = useCallback(() => {
+    // Ensure headers have the correct format
+    const enhancedHeaders: SSEHeaders = {
+      ...headers,
+      [SSE_HEADER_KEYS.ACCEPT]: 'text/event-stream',
+      [SSE_HEADER_KEYS.CACHE_CONTROL]: 'no-cache',
+      [SSE_HEADER_KEYS.CONNECTION]: 'keep-alive'
+    };
+    
+    // No need to convert case anymore since we're using lowercase champion-url consistently
+    
     sseService.connect({
       url,
-      headers,
+      headers: enhancedHeaders,
       withCredentials,
       onMessage: handleMessage,
       onError,

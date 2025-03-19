@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, useRef, ReactNode } from 'react';
 import { sseService } from '../services/sse/sseService';
-import { SSEMessage } from '../types/sse';
+import { SSEMessage, SSE_HEADER_KEYS } from '../types/sse';
 import { useAuth } from './AuthContext';
 
 interface SSEContextType {
@@ -20,27 +20,33 @@ export function SSEProvider({ children }: { children: ReactNode }) {
   const connectionRef = useRef<boolean>(false);
 
   const { authorizeResponse, authParams } = useAuth();
+  const championToken = import.meta.env.VITE_CHAMPION_TOKEN || '';
+  const championApiUrl = import.meta.env.VITE_CHAMPION_API_URL || '';
 
   useEffect(() => {
-    const canConnect = !connectionRef.current && 
-      authorizeResponse?.authorize.loginid && 
-      authParams?.token1 &&
-      import.meta.env.VITE_Auth_Url;
+    const canConnect = !connectionRef.current &&
+      championToken &&
+      championApiUrl;
 
     if (!canConnect) {
+      console.log('SSE Context: Cannot connect, missing required parameters');
       return;
     }
 
     console.log('SSE Context: Starting new connection...');
     connectionRef.current = true;
 
+    // Get the account UUID from environment variables
+    const accountUuid = import.meta.env.VITE_ACCOUNT_UUID || '';
+
     const handlers = sseService.connect({
-      url: `${import.meta.env.VITE_API_URL}/sse`,
+      url: `https://champion.mobile-bot.deriv.dev/champion/v1/sse?account_uuid=${accountUuid}`,
       headers: {
-        loginid: String(authorizeResponse.authorize.loginid || ''),
-        authorize: String(authParams?.token1 || ''),
-        'auth-url': import.meta.env.VITE_Auth_Url,
-        'Connection': 'keep-alive'
+        [SSE_HEADER_KEYS.AUTHORIZATION]: `Bearer ${championToken}`,
+        [SSE_HEADER_KEYS.CHAMPION_URL]: championApiUrl, // Now using lowercase 'champion-url'
+        [SSE_HEADER_KEYS.ACCEPT]: 'text/event-stream',
+        [SSE_HEADER_KEYS.CACHE_CONTROL]: 'no-cache',
+        [SSE_HEADER_KEYS.CONNECTION]: 'keep-alive'
       },
       onMessage: (event) => {
         if (!connectionRef.current) return;
@@ -89,7 +95,7 @@ export function SSEProvider({ children }: { children: ReactNode }) {
         console.log('SSE Context: Cleanup complete');
       }
     };
-  }, [authorizeResponse]); // Add authorizeResponse as dependency
+  }, [authorizeResponse, championToken, championApiUrl, authParams]); // Add dependencies
 
   const value = {
     isConnected,

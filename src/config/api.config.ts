@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_URL,
+  BASE_URL: import.meta.env.VITE_API_URL.replace('/champion/v1', ''),
   WS_URL: import.meta.env.VITE_WS_URL,
   TIMEOUT: 30000, // 30 seconds
   RETRY_ATTEMPTS: 3,
@@ -7,13 +7,13 @@ export const API_CONFIG = {
 
 export const API_ENDPOINTS = {
   // Trading endpoints
-  REPEAT_TRADE: '/repeat-trade',
-  IS_TRADING: '/is-trading',
-  STOP_TRADING: '/stop-trading',
-  Threshold_Trade: '/threshold-trade',
-  Martingale_Trade: '/martingale-trade',
+  REPEAT_TRADE: '/champion/v1/repeat-trade',
+  IS_TRADING: '/champion/v1/is-trading',
+  STOP_TRADING: '/champion/v1/stop-trading',
+  Threshold_Trade: '/champion/v1/threshold-trade',
+  Martingale_Trade: '/champion/v1/martingale-trade',
   // WebSocket endpoint
-  WS: '/ws',
+  WS: '/champion/v1/ws',
 }
 
 export const WS_EVENTS = {

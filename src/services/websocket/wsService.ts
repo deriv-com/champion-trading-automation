@@ -14,8 +14,15 @@ class WebSocketService {
   private messageHandler: MessageHandler | null = null;
   private pingInterval: number | null = null;
   private isConnecting = false;
+  private accountUuid: string;
+  private championToken: string;
+  private championApiUrl: string;
 
-  private constructor() {}
+  private constructor() {
+    this.accountUuid = import.meta.env.VITE_ACCOUNT_UUID || '';
+    this.championToken = import.meta.env.VITE_CHAMPION_TOKEN || '';
+    this.championApiUrl = import.meta.env.VITE_CHAMPION_API_URL || '';
+  }
   
   /**
    * getWsUrl: Constructs the WebSocket URL with authentication parameters.
@@ -25,7 +32,8 @@ class WebSocketService {
   private getWsUrl(): string {
     const wsUrl = configService.getValue('wsUrl');
     const appId = configService.getValue('oauthAppId');
-    return `${wsUrl}?app_id=${appId}&l=en&brand=deriv`;
+    const accountUuid = this.accountUuid;
+    return `${wsUrl}?app_id=${appId}&l=en&brand=deriv&account_uuid=${accountUuid}`;
   }
 
   /**
@@ -88,12 +96,22 @@ class WebSocketService {
       this.ws = null;
     }
 
-    this.ws = new WebSocket(this.getWsUrl());
+    const wsUrl = this.getWsUrl();
+    console.log('WebSocket: Connecting to URL:', wsUrl);
+    
+    this.ws = new WebSocket(wsUrl);
 
     this.ws.onopen = () => {
       console.log('WebSocket connected');
       this.isConnecting = false;
       this.startPingInterval();
+      
+      // Send authentication message if needed
+      if (this.championToken) {
+        this.send({
+          authorize: this.championToken
+        });
+      }
     };
 
     this.ws.onclose = () => {
@@ -143,11 +161,13 @@ class WebSocketService {
    */
   public send(payload: WebSocketRequest): void {
     if (this.ws?.readyState === WebSocket.OPEN) {
-      const message = {
+      // Only add req_id to the payload
+      const enhancedPayload: WebSocketRequest = {
         ...payload,
         req_id: Date.now()
       };
-      this.ws.send(JSON.stringify(message));
+      
+      this.ws.send(JSON.stringify(enhancedPayload));
     } else {
       console.error('WebSocket is not connected');
     }

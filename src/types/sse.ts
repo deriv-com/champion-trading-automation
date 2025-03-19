@@ -1,10 +1,16 @@
 import { TradeInfo } from './trade';
 
-export interface SSEHeaders extends Record<string, string> {
-  loginid: string;
-  authorize: string;
-  'auth-url': string;
-}
+// Define SSE headers as a simple Record type without extending it
+export type SSEHeaders = Record<string, string>;
+
+// Common header keys for reference
+export const SSE_HEADER_KEYS = {
+  AUTHORIZATION: 'Authorization',
+  CHAMPION_URL: 'champion-url', // Changed to lowercase to match Postman
+  ACCEPT: 'Accept',
+  CACHE_CONTROL: 'Cache-Control',
+  CONNECTION: 'Connection'
+} as const;
 
 export interface TradeUpdateMessage {
   login_id: string;

@@ -1,4 +1,4 @@
-import { SSEOptions, SSEService } from '../../types/sse';
+import { SSEOptions, SSEService, SSE_HEADER_KEYS } from '../../types/sse';
 
 class CustomEventSource {
   private abortController: AbortController | null = null;
@@ -32,17 +32,17 @@ class CustomEventSource {
     this.abortController = new AbortController();
 
     try {
+      console.log('SSE Service: Connecting to URL:', this.url);
+      console.log('SSE Service: Using headers:', this.headers);
+
+      // Use the headers exactly as provided, without modification
       const response = await fetch(this.url, {
         method: 'GET',
-        headers: {
-          'Accept': 'text/event-stream',
-          'Cache-Control': 'no-cache',
-          'Connection': 'keep-alive',
-          ...this.headers
-        },
+        headers: this.headers,
         mode: 'cors',
         credentials: this.withCredentials ? 'include' : 'omit',
-        signal: this.abortController.signal
+        signal: this.abortController.signal,
+        referrerPolicy: 'no-referrer' // Prevent Referer header from being sent
       });
 
       if (!response.ok) {
@@ -87,7 +87,7 @@ class CustomEventSource {
               }
 
               if (data.includes('heartbeat')) {
-                this.messageHandler(new MessageEvent('message', { 
+                this.messageHandler(new MessageEvent('message', {
                   data: JSON.stringify({ type: 'heartbeat' })
                 }));
                 continue;
@@ -172,8 +172,13 @@ class SSEServiceImpl implements SSEService {
   private messageHandlers: Set<(event: MessageEvent) => void> = new Set();
   private lastOptions: SSEOptions | null = null;
   private isConnecting: boolean = false;
+  private championToken: string;
+  private championApiUrl: string;
 
-  private constructor() {}
+  private constructor() {
+    this.championToken = import.meta.env.VITE_CHAMPION_TOKEN || '';
+    this.championApiUrl = import.meta.env.VITE_CHAMPION_API_URL || '';
+  }
 
   static getInstance(): SSEServiceImpl {
     if (!SSEServiceImpl.instance) {
@@ -183,33 +188,48 @@ class SSEServiceImpl implements SSEService {
   }
 
   connect(options: SSEOptions): number {
-    if (this.isConnected() && this.lastOptions && 
-        this.lastOptions.url === options.url && 
-        JSON.stringify(this.lastOptions.headers) === JSON.stringify(options.headers)) {
-      if (options.onMessage) {
-        this.messageHandlers.add(options.onMessage);
+    // Add champion-specific headers
+    const enhancedHeaders = {
+      ...options.headers,
+      [SSE_HEADER_KEYS.AUTHORIZATION]: `Bearer ${this.championToken}`,
+      [SSE_HEADER_KEYS.CHAMPION_URL]: this.championApiUrl, // Now using lowercase 'champion-url'
+      [SSE_HEADER_KEYS.ACCEPT]: 'text/event-stream',
+      [SSE_HEADER_KEYS.CACHE_CONTROL]: 'no-cache',
+      [SSE_HEADER_KEYS.CONNECTION]: 'keep-alive'
+    };
+
+    const enhancedOptions = {
+      ...options,
+      headers: enhancedHeaders
+    };
+
+    if (this.isConnected() && this.lastOptions &&
+        this.lastOptions.url === enhancedOptions.url &&
+        JSON.stringify(this.lastOptions.headers) === JSON.stringify(enhancedOptions.headers)) {
+      if (enhancedOptions.onMessage) {
+        this.messageHandlers.add(enhancedOptions.onMessage);
       }
       return this.messageHandlers.size;
     }
 
     if (this.isConnecting) {
-      if (options.onMessage) {
-        this.messageHandlers.add(options.onMessage);
+      if (enhancedOptions.onMessage) {
+        this.messageHandlers.add(enhancedOptions.onMessage);
       }
       return this.messageHandlers.size;
     }
     this.isConnecting = true;
-    this.lastOptions = options;
+    this.lastOptions = enhancedOptions;
 
     try {
       this.eventSource = new CustomEventSource(
-        options.url,
-        options.headers,
-        options.withCredentials
+        enhancedOptions.url,
+        enhancedOptions.headers,
+        enhancedOptions.withCredentials
       );
 
-      if (options.onMessage) {
-        this.messageHandlers.add(options.onMessage);
+      if (enhancedOptions.onMessage) {
+        this.messageHandlers.add(enhancedOptions.onMessage);
       }
 
       this.eventSource.onmessage = (event) => {
