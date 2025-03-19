@@ -1,6 +1,6 @@
-import axios, { AxiosInstance, AxiosError, AxiosResponse, RawAxiosRequestHeaders } from 'axios';
+import axios, { AxiosInstance, AxiosError, RawAxiosRequestHeaders } from 'axios';
 import { API_CONFIG } from '../../config/api.config';
-import { authStore } from '../../stores/authStore';
+// import { authStore } from '../../stores/authStore';
 
 class ApiService {
   private static instance: ApiService;

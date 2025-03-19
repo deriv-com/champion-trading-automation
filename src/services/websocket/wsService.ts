@@ -16,12 +16,12 @@ class WebSocketService {
   private isConnecting = false;
   private accountUuid: string;
   private championToken: string;
-  private championApiUrl: string;
+  // private championApiUrl: string;
 
   private constructor() {
     this.accountUuid = import.meta.env.VITE_ACCOUNT_UUID || '';
     this.championToken = import.meta.env.VITE_CHAMPION_TOKEN || '';
-    this.championApiUrl = 'http://mobile-backend-service-mock-gray:3000/';
+    // this.championApiUrl = 'http://mobile-backend-service-mock-gray:3000/';
   }
   
   /**
