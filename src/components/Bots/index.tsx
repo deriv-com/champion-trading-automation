@@ -44,7 +44,8 @@ export function Bots() {
   const {
     runningBots,
     addRunningBot,
-    removeRunningBot
+    removeRunningBot,
+    syncWithLocalStorage
   } = useRunningBots();
   
   // Handle SSE messages
@@ -131,6 +132,95 @@ export function Bots() {
     const latestBots = getStoredBots();
     setBots(latestBots);
     
+    // Check if any bots are marked as running in localStorage
+    const storedRunningBots = runningBots;
+    const runningBotIds = Object.keys(storedRunningBots);
+    
+    if (runningBotIds.length > 0) {
+      console.log('Found running bots in localStorage:', runningBotIds);
+      
+      // Verify with the server if these bots are actually still trading
+      const verifyRunningBots = async () => {
+        try {
+          // Import the trade service
+          const { tradeService } = await import('../../services/trade/tradeService');
+          
+          // Check trade status with the server
+          const tradeStatus = await tradeService.checkTradeStatus();
+          console.log('Trade status from server:', tradeStatus);
+          
+          // If we have active sessions from the server
+          if (tradeStatus && (tradeStatus.sessions || tradeStatus.tradeinfo_list)) {
+            // Use sessions if available, otherwise use tradeinfo_list
+            const activeSessions = tradeStatus.sessions || tradeStatus.tradeinfo_list || [];
+            const activeSessionIds = activeSessions.map(session => session.session_id);
+            console.log('Active session IDs from server:', activeSessionIds);
+            
+            // Update runningBots based on server response
+            const updatedRunningBots = { ...storedRunningBots };
+            let changed = false;
+            
+            // Check each bot in localStorage
+            for (const [botId, sessionId] of Object.entries(storedRunningBots)) {
+              // If the session is not active on the server, remove it from runningBots
+              if (!activeSessionIds.includes(sessionId)) {
+                console.log(`Bot ${botId} with session ${sessionId} is not active on the server, removing from running bots`);
+                delete updatedRunningBots[botId];
+                changed = true;
+                
+                // Check if this session exists in the completed sessions
+                const completedSession = activeSessions.find(session => 
+                  session.session_id === sessionId && session.is_completed
+                );
+                
+                if (completedSession) {
+                  console.log(`Bot ${botId} with session ${sessionId} has completed execution`);
+                  message.info(`Bot "${bots.find(b => b.id === botId)?.name || botId}" has completed execution`);
+                }
+              } else {
+                // Check if the session is marked as completed
+                const session = activeSessions.find(s => s.session_id === sessionId);
+                if (session && session.is_completed) {
+                  console.log(`Bot ${botId} with session ${sessionId} is marked as completed, removing from running bots`);
+                  delete updatedRunningBots[botId];
+                  changed = true;
+                  message.info(`Bot "${bots.find(b => b.id === botId)?.name || botId}" has completed execution`);
+                } else {
+                  console.log(`Bot ${botId} with session ${sessionId} is still active on the server`);
+                }
+              }
+            }
+            
+            // Update localStorage if there were changes
+            if (changed) {
+              localStorage.setItem('runningBots', JSON.stringify(updatedRunningBots));
+              // Sync the running bots state with localStorage
+              syncWithLocalStorage();
+              // Force a re-render to update the UI
+              setBots([...latestBots]);
+            }
+          } else {
+            console.log('No active sessions found on the server');
+            
+            // If no active sessions, clear all running bots
+            if (Object.keys(storedRunningBots).length > 0) {
+              console.log('Clearing all running bots as server reports no active sessions');
+              localStorage.setItem('runningBots', JSON.stringify({}));
+              // Sync the running bots state with localStorage
+              syncWithLocalStorage();
+              // Force a re-render to update the UI
+              setBots([...latestBots]);
+            }
+          }
+        } catch (error) {
+          console.error('Error verifying running bots with server:', error);
+        }
+      };
+      
+      // Verify running bots with the server
+      verifyRunningBots();
+    }
+    
     // Cleanup SSE connection when component unmounts
     return () => {
       // Disconnect from the hook's SSE if connected
@@ -139,7 +229,7 @@ export function Bots() {
         console.log('SSE hook disconnected on component unmount');
       }
     };
-  }, [disconnect, isConnected]);
+  }, [disconnect, isConnected, runningBots]);
 
 
   const navigate = useNavigate();
@@ -206,7 +296,7 @@ export function Bots() {
    * Output: void - Executes or stops the bot's trading strategy
    */
   const handleToggleBot = async (botId: string) => {
-    // Check if the bot is already running
+    // Check if the bot is already running in our local state
     const isRunning = !!runningBots[botId];
     
     try {
@@ -222,8 +312,37 @@ export function Bots() {
         // Stop the bot
         await stopBot(botId);
       } else {
-        // Start the bot
-        await startBot(botId);
+        // Check with the server if the bot is already trading
+        const { tradeService } = await import('../../services/trade/tradeService');
+        
+        try {
+          console.log('Checking trading status before starting bot...');
+          const tradeStatus = await tradeService.checkTradeStatus();
+          console.log('Trade status from server:', tradeStatus);
+          
+          // Get active sessions from the server
+          const activeSessions = tradeStatus.sessions || tradeStatus.tradeinfo_list || [];
+          
+          // Check if this bot has an active session
+          const sessionId = runningBots[botId];
+          if (sessionId && activeSessions.some(session => session.session_id === sessionId)) {
+            console.log(`Bot ${botId} is already trading with session ${sessionId}`);
+            message.info('This bot is already trading');
+            
+            // Update the UI to show the bot as running
+            if (!isRunning) {
+              addRunningBot(botId, sessionId);
+            }
+            return;
+          }
+          
+          // Start the bot if it's not already trading
+          await startBot(botId);
+        } catch (error) {
+          console.error('Error checking trading status:', error);
+          // If we can't check the status, try to start the bot anyway
+          await startBot(botId);
+        }
       }
     } catch (error) {
       console.error(`Error ${isRunning ? 'stopping' : 'starting'} bot:`, error);
