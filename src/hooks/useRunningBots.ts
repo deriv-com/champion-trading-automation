@@ -32,6 +32,16 @@ export const useRunningBots = () => {
   };
 
   /**
+   * Sync running bots state with localStorage
+   * This is useful when localStorage is updated outside of this hook
+   */
+  const syncWithLocalStorage = () => {
+    const storedRunningBots = getStoredRunningBots();
+    setRunningBots(storedRunningBots);
+    return storedRunningBots;
+  };
+
+  /**
    * Add a running bot to the list
    * @param botId ID of the bot that is running
    * @param sessionId Session ID of the running bot
@@ -74,6 +84,7 @@ export const useRunningBots = () => {
     setRunningBots,
     getStoredRunningBots,
     updateLocalStorage,
+    syncWithLocalStorage,
     addRunningBot,
     removeRunningBot,
     isBotRunning,
