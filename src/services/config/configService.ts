@@ -1,3 +1,39 @@
+/**
+ * @file: configService.ts
+ * @description: Service for managing application configuration with support for
+ *               environment variables, local storage overrides, and runtime configuration.
+ *
+ * @components:
+ *   - ConfigService: Singleton class implementing configuration management
+ *   - configService: Exported singleton instance
+ *   - AuthConfig: Interface defining configuration structure
+ * @dependencies:
+ *   - localStorage: For persistent configuration overrides
+ *   - Vite environment variables: For default configuration values
+ * @usage:
+ *   // Get a configuration value
+ *   const wsUrl = configService.getValue('wsUrl');
+ *
+ *   // Override a configuration value
+ *   configService.setValue('oauthUrl', 'https://custom-oauth-server.com');
+ *
+ *   // Get complete configuration
+ *   const config = configService.getConfig();
+ *
+ * @architecture: Singleton service with localStorage persistence
+ * @relationships:
+ *   - Used by: OAuth service, WebSocket service, API services
+ *   - Related to: Environment configuration (.env files)
+ * @dataFlow:
+ *   - Defaults: Loaded from environment variables
+ *   - Overrides: Stored in and retrieved from localStorage
+ *   - Runtime: Merged configuration provided to services
+ *
+ * @ai-hints: This service implements the Singleton pattern and provides a centralized
+ *            way to manage configuration with a layered approach (defaults from env vars,
+ *            overrides from localStorage). It's particularly useful for endpoint
+ *            configuration that might need to be changed at runtime.
+ */
 interface AuthConfig {
   oauthAppId: string;
   oauthUrl: string;

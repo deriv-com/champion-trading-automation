@@ -1,5 +1,37 @@
+/**
+ * @file: balanceService.ts
+ * @description: Service for managing user balance data, including fetching,
+ *               formatting, and calculating balance changes.
+ *
+ * @components:
+ *   - BalanceService class: Service with balance-related functionality
+ *   - balanceService export: Instance of the service
+ * @dependencies:
+ *   - types/balance: BalanceData and ExternalAPIHeaders types
+ *   - config/api.config: API configuration and endpoints
+ *   - services/api/apiService: Core API service for HTTP requests
+ * @usage:
+ *   // Fetch initial balance
+ *   const balance = await balanceService.fetchInitialBalance();
+ *
+ *   // Format balance for display
+ *   const formatted = balanceService.formatBalance('1234.56'); // Returns '1,234.56'
+ *
+ * @architecture: Service module with utility methods
+ * @relationships:
+ *   - Used by: BalanceContext, components displaying balance
+ *   - Related to: balanceStreamService for real-time updates
+ * @dataFlow:
+ *   - Fetches balance data from API
+ *   - Formats and processes balance information
+ *   - Provides utilities for balance change calculations
+ *
+ * @ai-hints: This service handles both initial balance fetching and various
+ *            formatting/calculation utilities for balance display. It includes
+ *            error handling and fallback values for robustness.
+ */
 import { BalanceData, ExternalAPIHeaders } from '../../types/balance';
-import { API_CONFIG, API_ENDPOINTS } from '../../config/api.config';
+import { API_ENDPOINTS } from '../../config/api.config';
 import { apiService } from '../api/apiService';
 
 /**
@@ -27,7 +59,7 @@ class BalanceService {
    */
   async fetchInitialBalance(): Promise<BalanceData> {
     try {
-      const fullUrl = `${API_CONFIG.EXTERNAL_API_BASE_URL}${API_ENDPOINTS.BALANCE}`;
+      const fullUrl = `https://mock.mobile-bot.deriv.dev/${API_ENDPOINTS.BALANCE}`;
       const headers: ExternalAPIHeaders = {};
       
       const data: InitialBalanceResponse = await apiService.get<InitialBalanceResponse>(
@@ -98,7 +130,7 @@ class BalanceService {
    * @returns The configured balance stream URL
    */
   getBalanceStreamUrl(): string {
-    return `${API_CONFIG.EXTERNAL_API_BASE_URL}${API_ENDPOINTS.BALANCE_STREAM}`;
+    return `https://mock.mobile-bot.deriv.dev/${API_ENDPOINTS.BALANCE_STREAM}`;
   }
 
   /**

@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useBalance } from '../contexts/BalanceContext';
-import { useAuth } from '../contexts/AuthContext';
 import { BalanceData } from '../types/balance';
 import { balanceService } from '../services/balance/balanceService';
 import { balanceStreamService } from '../services/balance/balanceStreamService';
@@ -18,19 +17,17 @@ let isConnectingToBalanceStream = false;
  */
 export function useBalanceSSE() {
   const { balanceData, updateBalance, refreshBalance } = useBalance();
-  const { authParams, authorizeResponse } = useAuth();
   const [isConnected, setIsConnected] = useState(false);
   
-  // Check if the user is logged in
-  const isLoggedIn = !!(authParams?.token1 && authorizeResponse?.authorize);
+  // Always connected for SSE connection purposes
   
-  // Fetch initial balance only once when logged in
+  // Fetch initial balance only once
   useEffect(() => {
-    if (isLoggedIn && !initialBalanceFetched) {
+    if (!initialBalanceFetched) {
       refreshBalance();
       initialBalanceFetched = true;
     }
-  }, [isLoggedIn, refreshBalance]); // Run when login state changes
+  }, [refreshBalance]); // No longer dependent on login state
   
   // Process message handler - defined with useCallback to prevent recreation
   const processMessage = useCallback((balanceData: BalanceData) => {
@@ -38,10 +35,10 @@ export function useBalanceSSE() {
     updateBalance(balanceData);
   }, [updateBalance]);
   
-  // Connect to the balance stream only once when logged in
+  // Connect to the balance stream regardless of login status
   useEffect(() => {
-    // Only connect if the user is logged in and we haven't established a connection
-    if (isLoggedIn && !balanceStreamEstablished && !isConnectingToBalanceStream) {
+    // Connect if we haven't established a connection yet
+    if (!balanceStreamEstablished && !isConnectingToBalanceStream) {
       // Set the connecting flag
       isConnectingToBalanceStream = true;
       
@@ -53,25 +50,15 @@ export function useBalanceSSE() {
       
       // Mark the connection as established
       balanceStreamEstablished = true;
-    } else if (!isLoggedIn && balanceStreamEstablished) {
-      // If user logged out and we had a connection, reset the connection state
-      balanceStreamService.handleLogout();
-      balanceStreamEstablished = false;
-      isConnectingToBalanceStream = false;
     }
     
-    // Set up an interval to check the connection status only if logged in
+    // Set up an interval to check the connection status
     let checkConnectionInterval: number | undefined;
     
-    if (isLoggedIn) {
-      checkConnectionInterval = window.setInterval(() => {
-        const connected = balanceStreamService.getConnectionStatus();
-        setIsConnected(connected);
-      }, 1000);
-    } else {
-      // If not logged in, ensure we show as disconnected
-      setIsConnected(false);
-    }
+    checkConnectionInterval = window.setInterval(() => {
+      const connected = balanceStreamService.getConnectionStatus();
+      setIsConnected(connected);
+    }, 1000);
     
     // Cleanup function
     return () => {
@@ -80,7 +67,7 @@ export function useBalanceSSE() {
       }
       // Note: We don't disconnect on unmount, as other components may be using the connection
     };
-  }, [isLoggedIn, processMessage]); // Depend on login state and processMessage
+  }, [processMessage]); // Only depend on processMessage, not login state
   
   
   return { isConnected, balanceData };

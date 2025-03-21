@@ -4,6 +4,7 @@ import {
   CaretRightOutlined,
   DeleteOutlined,
   EditOutlined,
+  StopOutlined,
 } from "@ant-design/icons";
 import "./styles.scss";
 
@@ -27,14 +28,20 @@ interface BotCardProps {
   onRun: () => void;
   onDelete: () => void;
   onEdit?: () => void;
+  isRunning?: boolean;
 }
 
 /**
  * BotCard: Card component that displays a trading bot with its details and actions.
- * Inputs: { bot: Bot, onRun: () => void } - Bot data and callback for run action
+ * Inputs: 
+ *   - bot: Bot - Bot data
+ *   - onRun: () => void - Callback for run/stop action
+ *   - onDelete: () => void - Callback for delete action
+ *   - onEdit: () => void - Callback for edit action
+ *   - isRunning: boolean - Whether the bot is currently running
  * Output: JSX.Element - Card with bot details, parameters, and action buttons
  */
-export function BotCard({ bot, onRun, onDelete, onEdit }: BotCardProps) {
+export function BotCard({ bot, onRun, onDelete, onEdit, isRunning = false }: BotCardProps) {
   return (
     <div className="bot-card">
       <div className="bot-card__header">
@@ -90,11 +97,12 @@ export function BotCard({ bot, onRun, onDelete, onEdit }: BotCardProps) {
 
         <Button
           type="primary"
-          icon={<CaretRightOutlined />}
+          danger={isRunning}
+          icon={isRunning ? <StopOutlined /> : <CaretRightOutlined />}
           className="bot-card__run-btn"
           onClick={onRun}
         >
-          Run
+          {isRunning ? "Stop" : "Run"}
         </Button>
       </div>
     </div>

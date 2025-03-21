@@ -1,8 +1,51 @@
+/**
+ * @file: useWebSocket.ts
+ * @description: Custom React hook for WebSocket communication with automatic
+ *               connection management, message handling, and connection status tracking.
+ *
+ * @components:
+ *   - useWebSocket: Main hook for WebSocket functionality
+ *   - WebSocketMessage: Interface for typed WebSocket messages
+ *   - UseWebSocketOptions: Configuration options interface
+ * @dependencies:
+ *   - React hooks: useEffect, useCallback, useState
+ *   - wsService: Service for WebSocket connection handling
+ * @usage:
+ *   const { isConnected, send, connect, disconnect } = useWebSocket<ResponseType>({
+ *     onMessage: (data) => console.log(data),
+ *     autoConnect: true
+ *   });
+ *
+ *   // Send a message when connected
+ *   useEffect(() => {
+ *     if (isConnected) {
+ *       send({ action: 'subscribe', topic: 'prices' });
+ *     }
+ *   }, [isConnected, send]);
+ *
+ * @architecture: Custom React hook with connection lifecycle management
+ * @relationships:
+ *   - Uses: wsService for actual WebSocket communication
+ *   - Used by: Components and other hooks needing WebSocket functionality
+ * @dataFlow:
+ *   - Input: Configuration options and message payloads
+ *   - Processing: Connection management and message handling
+ *   - Output: Connection status and control functions
+ *
+ * @ai-hints: This hook uses React's useCallback for memoized functions and
+ *            useEffect for connection lifecycle management. It's generic-typed
+ *            to support different message data structures and includes automatic
+ *            connection status tracking.
+ */
 import { useEffect, useCallback, useState } from 'react';
 import { wsService } from '../services/websocket/wsService';
+import { API_CONFIG } from '../config/api.config';
 
 interface WebSocketMessage {
-  msg_type: string;
+  msg_type?: string;
+  type?: string;
+  account_uuid?: string;
+  champion_url?: string;
   [key: string]: unknown;
 }
 
@@ -28,8 +71,19 @@ export function useWebSocket<T extends WebSocketMessage>(
    * Output: void - Calls the onMessage callback if provided
    */
   const handleMessage = useCallback((message: WebSocketMessage) => {
+    // Handle both old and new API message formats
     if (onMessage) {
-      onMessage(message as T);
+      // Check if this is a Champion API message (has type instead of msg_type)
+      if (message.type && !message.msg_type) {
+        // Convert to expected format if needed
+        const adaptedMessage = {
+          ...message,
+          msg_type: message.type
+        };
+        onMessage(adaptedMessage as T);
+      } else {
+        onMessage(message as T);
+      }
     }
   }, [onMessage]);
 
@@ -56,8 +110,13 @@ export function useWebSocket<T extends WebSocketMessage>(
    * Inputs: payload: Record<string, unknown> - The data to send to the server
    * Output: void - Transmits the message through the WebSocket connection
    */
-  const send = useCallback((payload: Record<string, unknown>) => {
-    wsService.send(payload);
+  const send = useCallback((payload: Record<string, unknown>) => {    
+    const enhancedPayload = {
+      ...payload,
+      account_uuid: payload.account_uuid || API_CONFIG.ACCOUNT_UUID,
+      champion_url: payload.champion_url || API_CONFIG.CHAMPION_API_URL
+    };
+    wsService.send(enhancedPayload);
   }, []);
 
   // Handle auto-connect and cleanup

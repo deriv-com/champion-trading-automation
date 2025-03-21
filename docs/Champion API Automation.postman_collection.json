@@ -1,0 +1,317 @@
+{
+	"info": {
+		"_postman_id": "a25ec2a2-e7fe-4287-840d-00d1c6e1df91",
+		"name": "Champion API Automation",
+		"description": "Collection for testing Champion API automation endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19355820"
+	},
+	"item": [
+		{
+			"name": "Start Repeat Trade",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{champion_token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"product_id\": \"rise_fall\",\n    \"proposal_details\": {\n        \"instrument_id\": \"frxUSDJPY\",\n        \"duration\": 60,\n        \"duration_unit\": \"seconds\",\n        \"allow_equals\": true,\n        \"stake\": \"10.00\",\n        \"variant\": \"rise\",\n        \"payout\": \"15.00\"\n    },\n    \"number_of_trades\": 3\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/champion/v1/repeat-trade?account_uuid={{account_uuid}}&champion_url={{champion_api_url}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"champion",
+						"v1",
+						"repeat-trade"
+					],
+					"query": [
+						{
+							"key": "account_uuid",
+							"value": "{{account_uuid}}"
+						},
+						{
+							"key": "champion_url",
+							"value": "{{champion_api_url}}"
+						}
+					]
+				},
+				"description": "Start a repeat trade strategy with the Champion API"
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Trading Sessions",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{champion_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/champion/v1/is-trading?account_uuid={{account_uuid}}&champion_url={{champion_api_url}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"champion",
+						"v1",
+						"is-trading"
+					],
+					"query": [
+						{
+							"key": "account_uuid",
+							"value": "{{account_uuid}}"
+						},
+						{
+							"key": "champion_url",
+							"value": "{{champion_api_url}}"
+						}
+					]
+				},
+				"description": "Get all active trading sessions for the user"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Trading Session by ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{champion_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/champion/v1/is-trading/{{session_id}}?account_uuid={{account_uuid}}&champion_url={{champion_api_url}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"champion",
+						"v1",
+						"is-trading",
+						"{{session_id}}"
+					],
+					"query": [
+						{
+							"key": "account_uuid",
+							"value": "{{account_uuid}}"
+						},
+						{
+							"key": "champion_url",
+							"value": "{{champion_api_url}}"
+						}
+					]
+				},
+				"description": "Get details of a specific trading session"
+			},
+			"response": []
+		},
+		{
+			"name": "Stop Trading Session",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{champion_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/champion/v1/stop-trading/{{session_id}}?account_uuid={{account_uuid}}&champion_url={{champion_api_url}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"champion",
+						"v1",
+						"stop-trading",
+						"{{session_id}}"
+					],
+					"query": [
+						{
+							"key": "account_uuid",
+							"value": "{{account_uuid}}"
+						},
+						{
+							"key": "champion_url",
+							"value": "{{champion_api_url}}"
+						}
+					]
+				},
+				"description": "Stop an active trading session"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Available Strategies",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{champion_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/champion/v1/strategies?champion_url={{champion_api_url}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"champion",
+						"v1",
+						"strategies"
+					],
+					"query": [
+						{
+							"key": "champion_url",
+							"value": "{{champion_api_url}}"
+						}
+					]
+				},
+				"description": "Get a list of available trading strategies"
+			},
+			"response": []
+		},
+		{
+			"name": "WebSocket Connection",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{champion_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/champion/v1/ws?account_uuid={{account_uuid}}&champion_url={{champion_api_url}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"champion",
+						"v1",
+						"ws"
+					],
+					"query": [
+						{
+							"key": "account_uuid",
+							"value": "{{account_uuid}}"
+						},
+						{
+							"key": "champion_url",
+							"value": "{{champion_api_url}}"
+						}
+					]
+				},
+				"description": "Connect to WebSocket for real-time updates (use in Postman WebSocket client)"
+			},
+			"response": []
+		},
+		{
+			"name": "SSE Connection",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{champion_token}}"
+					},
+					{
+						"key": "Accept",
+						"value": "text/event-stream"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/champion/v1/sse?account_uuid={{account_uuid}}&champion_url={{champion_api_url}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"champion",
+						"v1",
+						"sse"
+					],
+					"query": [
+						{
+							"key": "account_uuid",
+							"value": "{{account_uuid}}"
+						},
+						{
+							"key": "champion_url",
+							"value": "{{champion_api_url}}"
+						}
+					]
+				},
+				"description": "Connect to Server-Sent Events for real-time updates"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "champion_token",
+			"value": "your_champion_api_token",
+			"type": "string"
+		},
+		{
+			"key": "champion_api_url",
+			"value": "https://champion-api.deriv.com",
+			"type": "string"
+		},
+		{
+			"key": "account_uuid",
+			"value": "your_account_uuid",
+			"type": "string"
+		},
+		{
+			"key": "session_id",
+			"value": "session_id_from_start_trade_response",
+			"type": "string"
+		}
+	]
+}

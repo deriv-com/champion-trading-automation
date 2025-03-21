@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Card, Typography, Tag, Tooltip, Space, Button } from 'antd';
+import { Card, Typography, Tag, Tooltip, Space } from 'antd';
 import {
   ClockCircleOutlined,
   DollarOutlined,
@@ -12,6 +12,33 @@ import './styles.scss';
 
 const { Text, Title } = Typography;
 
+// Helper functions for strategy display
+const getStrategyLabel = (strategy: string): string => {
+  switch (strategy) {
+    case TradeStrategy.REPEAT:
+      return 'Repeat Trade';
+    case TradeStrategy.MARTINGALE:
+      return 'Martingale Trade';
+    case TradeStrategy.THRESHOLD:
+      return 'Threshold Trade';
+    default:
+      return strategy || 'Unknown Strategy';
+  }
+};
+
+const getStrategyColor = (strategy: string): string => {
+  switch (strategy) {
+    case TradeStrategy.REPEAT:
+      return 'blue';
+    case TradeStrategy.MARTINGALE:
+      return 'green';
+    case TradeStrategy.THRESHOLD:
+      return 'purple';
+    default:
+      return 'default';
+  }
+};
+
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleString('en-US', {
     year: 'numeric',
@@ -22,7 +49,9 @@ const formatDate = (dateString: string) => {
   });
 };
 
-const formatProfit = (profit: number) => {
+const formatProfit = (profit: number | undefined) => {
+  if (profit === undefined) return '$0.00';
+  
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -30,10 +59,10 @@ const formatProfit = (profit: number) => {
   }).format(profit);
 };
 
-const TradeCard: React.FC<TradeCardProps> = ({ trade, loading, onClose, lastUpdated }) => {
+const TradeCard: React.FC<TradeCardProps> = ({ trade, loading, onClose: _, lastUpdated }) => {
   const [highlight, setHighlight] = useState(false);
   const prevProfitRef = useRef(trade.total_profit);
-  const prevContractsRef = useRef(trade.contracts.map(c => c.profit));
+  const prevContractsRef = useRef(trade.contracts?.map(c => c.profit) || []);
   
   // Add animation when profit changes
   useEffect(() => {
@@ -50,19 +79,21 @@ const TradeCard: React.FC<TradeCardProps> = ({ trade, loading, onClose, lastUpda
       }
       
       // Check if any contract profits changed
-      const contractsChanged = trade.contracts.some((contract, index) => {
-        return index >= prevContractsRef.current.length ||
-               contract.profit !== prevContractsRef.current[index];
-      });
-      
-      if (contractsChanged) {
-        setHighlight(true);
-        const timer = setTimeout(() => {
-          setHighlight(false);
-        }, 2000);
+      if (trade.contracts && trade.contracts.length > 0) {
+        const contractsChanged = trade.contracts.some((contract, index) => {
+          return index >= prevContractsRef.current.length ||
+                 contract.profit !== prevContractsRef.current[index];
+        });
         
-        prevContractsRef.current = trade.contracts.map(c => c.profit);
-        return () => clearTimeout(timer);
+        if (contractsChanged) {
+          setHighlight(true);
+          const timer = setTimeout(() => {
+            setHighlight(false);
+          }, 2000);
+          
+          prevContractsRef.current = trade.contracts.map(c => c.profit);
+          return () => clearTimeout(timer);
+        }
       }
     }
   }, [trade, lastUpdated]);
@@ -71,29 +102,51 @@ const TradeCard: React.FC<TradeCardProps> = ({ trade, loading, onClose, lastUpda
   const profitClass = isProfit ? 'profit' : 'loss';
 
   const renderStrategyDetails = () => {
-    if (trade.strategy === TradeStrategy.REPEAT) {
-      return (
-        <Space direction="vertical" size="small">
-          <Text>
-            <SwapOutlined /> Number of Trades: {trade.number_of_trade}
-          </Text>
-          <Text>
-            <DollarOutlined /> Initial Amount: {formatProfit(trade.initial)}
-          </Text>
-        </Space>
-      );
-    }
-
-    return (
-      <Space direction="vertical" size="small">
-        <Text>
-          <ClockCircleOutlined /> Duration: {trade.duration} minutes
-        </Text>
-        <Text>
-          <AimOutlined /> Thresholds: {formatProfit(trade.profit_threshold)} / {formatProfit(trade.loss_threshold)}
-        </Text>
-      </Space>
+    // Common details for all strategies
+    const commonDetails = (
+      <Text>
+        <DollarOutlined /> Initial Amount: {formatProfit(trade.initial)}
+      </Text>
     );
+
+    switch (trade.strategy) {
+      case TradeStrategy.REPEAT:
+        return (
+          <Space direction="vertical" size="small">
+            {commonDetails}
+            <Text>
+              <SwapOutlined /> Number of Trades: {trade.number_of_trade}
+            </Text>
+          </Space>
+        );
+      
+      case TradeStrategy.MARTINGALE:
+        return (
+          <Space direction="vertical" size="small">
+            {commonDetails}
+            <Text>
+              <SwapOutlined /> Number of Trades: {trade.number_of_trade}
+            </Text>
+            <Text>
+              <AimOutlined /> Thresholds: {formatProfit(trade.profit_threshold)} / {formatProfit(trade.loss_threshold)}
+            </Text>
+          </Space>
+        );
+      
+      case TradeStrategy.THRESHOLD:
+      default:
+        return (
+          <Space direction="vertical" size="small">
+            {commonDetails}
+            <Text>
+              <ClockCircleOutlined /> Duration: {trade.duration} minutes
+            </Text>
+            <Text>
+              <AimOutlined /> Thresholds: {formatProfit(trade.profit_threshold)} / {formatProfit(trade.loss_threshold)}
+            </Text>
+          </Space>
+        );
+    }
   };
 
   return (
@@ -103,9 +156,16 @@ const TradeCard: React.FC<TradeCardProps> = ({ trade, loading, onClose, lastUpda
       hoverable
     >
       <div className="trade-card__header">
-        <Tag color={trade.strategy === TradeStrategy.REPEAT ? 'blue' : 'purple'}>
-          {trade.strategy === TradeStrategy.REPEAT ? 'Repeat Trade' : 'Threshold Trade'}
-        </Tag>
+        <div className="trade-card__header-tags">
+          <Tag color={getStrategyColor(trade.strategy)}>
+            {getStrategyLabel(trade.strategy)}
+          </Tag>
+          {trade.status && (
+            <Tag color={trade.status === 'error' ? 'red' : trade.status === 'stopped' ? 'orange' : 'green'}>
+              {trade.status.charAt(0).toUpperCase() + trade.status.slice(1)}
+            </Tag>
+          )}
+        </div>
         <Tooltip title="Session ID">
           <Text className="trade-card__session-id" copyable>
             {trade.session_id}
@@ -127,15 +187,15 @@ const TradeCard: React.FC<TradeCardProps> = ({ trade, loading, onClose, lastUpda
         {renderStrategyDetails()}
       </div>
 
-      {trade.contracts.length > 0 && (
+      {trade.contracts && trade.contracts.length > 0 && (
         <div className="trade-card__contracts">
           <Text strong>Contracts</Text>
           <div className="trade-card__contracts-list">
             {trade.contracts.map((contract, index) => (
-              <div key={contract.buy_id} className="trade-card__contract">
+              <div key={contract.buy_id || index} className="trade-card__contract">
                 <Text type="secondary">#{index + 1}</Text>
-                <Text copyable={{ text: contract.buy_id }}>
-                  {contract.buy_id.slice(0, 8)}...
+                <Text copyable={{ text: contract.buy_id || '' }}>
+                  {contract.buy_id ? `${contract.buy_id.slice(0, 8)}...` : 'N/A'}
                 </Text>
                 <Text className={contract.profit > 0 ? 'profit' : 'loss'}>
                   {formatProfit(contract.profit)}
@@ -147,13 +207,18 @@ const TradeCard: React.FC<TradeCardProps> = ({ trade, loading, onClose, lastUpda
       )}
       
       <div className="trade-card__actions">
-        <Button
-          type="primary"
-          onClick={() => onClose?.(trade.session_id)}
-          disabled={loading}
-        >
-          Close Position
-        </Button>
+        {trade.status === 'stopped' || trade.status === 'error' ? (
+          <></>
+        ) : (
+          // <Button
+          //   type="primary"
+          //   onClick={() => onClose?.(trade.session_id)}
+          //   disabled={loading}
+          // >
+          //   Close Position
+          // </Button>
+          <></>
+        )}
       </div>
     </Card>
   );

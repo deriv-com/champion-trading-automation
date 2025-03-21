@@ -13,6 +13,12 @@
   z-index: 100;
   border-bottom: 1px solid var(--border-color);
 
+  &__user-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
   &__logo-section {
     display: flex;
     align-items: center;

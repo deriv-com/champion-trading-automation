@@ -1,3 +1,38 @@
+/**
+ * @file: AuthContext.tsx
+ * @description: React context provider for authentication state management,
+ *               handling auth parameters, authorization responses, and local storage persistence.
+ *
+ * @components:
+ *   - AuthContext: React context for auth state
+ *   - AuthProvider: Provider component that manages auth state
+ *   - useAuth: Custom hook for consuming auth context
+ * @dependencies:
+ *   - React: createContext, useContext, useState, useEffect
+ *   - types/auth: AuthorizeResponse type
+ *   - stores/authStore: Global auth state store
+ * @usage:
+ *   // Wrap application with provider
+ *   <AuthProvider>
+ *     <App />
+ *   </AuthProvider>
+ *
+ *   // Use auth state in components
+ *   const { authParams, setAuthParams } = useAuth();
+ *
+ * @architecture: Context Provider pattern with local storage persistence
+ * @relationships:
+ *   - Used by: App component and any component needing auth state
+ *   - Interacts with: authStore for global state synchronization
+ * @dataFlow:
+ *   - State management: Manages auth parameters and response
+ *   - Persistence: Syncs with localStorage and authStore
+ *   - Error handling: Clears auth state on auth errors
+ *
+ * @ai-hints: This context uses a dual storage approach - React state for components
+ *            and localStorage for persistence across sessions. It also syncs with
+ *            the singleton authStore for non-React code access.
+ */
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { AuthorizeResponse } from '../types/auth';
 import { authStore } from '../stores/authStore';

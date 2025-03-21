@@ -1,3 +1,35 @@
+/**
+ * @file: MarketSelector/index.tsx
+ * @description: Component for selecting trading markets with filtering, search,
+ *               favorites management, and categorized display of market options.
+ *
+ * @components:
+ *   - MarketSelector: Main component for market selection
+ *   - Market sections: Synthetics, Continuous Indices, Crash/Boom, Forex
+ * @dependencies:
+ *   - React: Core functionality and state management
+ *   - antd: Input, Tabs components and icons
+ *   - types/market: Market data types and sample data
+ *   - MarketIcon: Custom icon component for market symbols
+ * @usage:
+ *   <MarketSelector
+ *     onSelectMarket={(market) => handleMarketSelection(market)}
+ *     selectedMarket={currentMarket}
+ *   />
+ *
+ * @architecture: Compound component with filtering and categorization
+ * @relationships:
+ *   - Used by: Trading forms and market selection interfaces
+ *   - Uses: MarketIcon component for visual representation
+ * @dataFlow:
+ *   - Input: Selected market and selection callback
+ *   - State: Search query, active tab, favorite markets
+ *   - Output: Market selection events
+ *
+ * @ai-hints: This component handles multiple filtering methods (tabs, search, favorites)
+ *            and organizes markets into categories. It uses conditional rendering
+ *            to display different sections based on the active tab and search state.
+ */
 import React, { useState } from "react";
 import { Input, Tabs } from "antd";
 import { SearchOutlined, StarOutlined, StarFilled } from "@ant-design/icons";

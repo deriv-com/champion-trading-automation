@@ -1,9 +1,11 @@
 import { TradeInfo } from './trade';
 
-export interface SSEHeaders extends Record<string, string> {
-  loginid: string;
-  authorize: string;
-  'auth-url': string;
+export interface SSEHeaders {
+  'Authorization': string;
+  'Accept': string;
+  'Content-Type'?: string;
+  'Cache-Control'?: string;
+  [key: string]: string | undefined;
 }
 
 export interface TradeUpdateMessage {
@@ -24,6 +26,11 @@ export interface SSEOptions {
   onError?: (error: Event) => void;
   onOpen?: (event: Event) => void;
   autoConnect?: boolean;
+  queryParams?: {
+    account_uuid: string;
+    champion_url?: string;
+    [key: string]: string | undefined;
+  };
 }
 
 export interface SSEMessage<T = unknown> {

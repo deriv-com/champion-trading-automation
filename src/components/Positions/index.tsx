@@ -1,24 +1,48 @@
+/**
+ * @file: Positions/index.tsx
+ * @description: Component for displaying and managing trading positions,
+ *               including filtering, sorting, and position management.
+ *
+ * @components:
+ *   - Positions: Main component for positions display
+ *   - TradeFilters: Sub-component for filtering positions
+ *   - TradeGrid: Sub-component for displaying position data in a grid
+ * @dependencies:
+ *   - React: Core functionality and hooks
+ *   - antd: UI components (Alert, Spin, Typography)
+ *   - contexts/PositionsContext: Trading positions data and actions
+ *   - types/positions: Position-related type definitions
+ * @usage:
+ *   <Positions />
+ *
+ * @architecture: Container component with filtering and child components
+ * @relationships:
+ *   - Parent: PositionsPage
+ *   - Children: TradeFilters, TradeGrid
+ *   - Context: Uses PositionsContext for data and actions
+ * @dataFlow:
+ *   - Input: Trading positions from PositionsContext
+ *   - Processing: Filtering and sorting based on user selections
+ *   - Output: Filtered positions display and position management actions
+ *
+ * @ai-hints: This component handles the display logic for trading positions,
+ *            including filtering, sorting, and empty state handling. It uses
+ *            the PositionsContext to fetch and manage position data, with
+ *            optimizations to prevent redundant API calls.
+ */
 import React, { useState, useEffect, useRef } from 'react';
-import { Alert, Spin, Typography } from 'antd';
+import { Alert, Spin, Typography, Tabs } from 'antd';
 import { SwapOutlined } from '@ant-design/icons';
-import { PositionsFilters } from '../../types/positions';
 import { usePositions } from '../../contexts/PositionsContext';
-import TradeFilters from './components/TradeFilters';
 import TradeGrid from './components/TradeGrid';
 import './styles.scss';
 
 const { Title } = Typography;
-
-const DEFAULT_FILTERS: PositionsFilters = {
-  strategy: null,
-  profitStatus: 'all',
-  sortBy: 'time',
-  sortDirection: 'desc',
-};
+const { TabPane } = Tabs;
 
 const Positions: React.FC = () => {
   const { state, closePosition, fetchTrades } = usePositions();
-  const [filters, setFilters] = useState<PositionsFilters>(DEFAULT_FILTERS);
+  const [activeTab, setActiveTab] = useState<string>('open');
   const hasFetched = useRef(false);
 
   // Fetch trades when the component mounts, but only once
@@ -29,63 +53,88 @@ const Positions: React.FC = () => {
     }
   }, [fetchTrades]);
 
-  const handleFiltersChange = (newFilters: PositionsFilters) => {
-    setFilters(newFilters);
+  const getOpenAndClosedTrades = () => {
+    // Convert trades object to array
+    const allTrades = Object.values(state.trades);
+    
+    // Separate open and closed trades
+    const openTrades = allTrades.filter(trade =>
+      trade.status !== 'stopped' && trade.status !== 'error' && trade.status !== 'completed'
+    );
+    
+    const closedTrades = allTrades.filter(trade =>
+      trade.status === 'stopped' || trade.status === 'error' || trade.status === 'completed'
+    );
+    
+    // Sort by start time (newest first)
+    const sortTrades = (trades: any[]) => {
+      return [...trades].sort((a, b) =>
+        new Date(b.start_time).getTime() - new Date(a.start_time).getTime()
+      );
+    };
+    
+    return {
+      openTrades: sortTrades(openTrades),
+      closedTrades: sortTrades(closedTrades)
+    };
   };
 
-  const getFilteredTrades = () => {
-    // Convert trades object to array
-    let filteredTrades = Object.values(state.trades);
+  const { openTrades, closedTrades } = getOpenAndClosedTrades();
 
-    // Apply strategy filter
-    if (filters.strategy) {
-      filteredTrades = filteredTrades.filter(
-        trade => trade.strategy === filters.strategy
+  const handleTabChange = (key: string) => {
+    setActiveTab(key);
+  };
+
+  // Handle position closing and switch to Closed tab
+  const handleClosePosition = async (sessionId: string) => {
+    const result = await closePosition(sessionId);
+    if (result) {
+      // Switch to the Closed Positions tab
+      setActiveTab('closed');
+    }
+  };
+
+  const renderTabContent = (trades: any[], tabType: string) => {
+    if (state.loading) {
+      return (
+        <div className="positions__loading">
+          <Spin size="large" />
+        </div>
       );
     }
-
-    // Apply profit status filter
-    if (filters.profitStatus !== 'all') {
-      filteredTrades = filteredTrades.filter(trade => {
-        if (filters.profitStatus === 'profit') {
-          return trade.total_profit > 0;
-        }
-        return trade.total_profit < 0;
-      });
+    
+    if (trades.length === 0) {
+      return (
+        <div className="positions__empty">
+          <SwapOutlined />
+          <Title level={3}>
+            {tabType === 'open' ? 'No Active Positions' : 'No Closed Positions'}
+          </Title>
+          <p>
+            {tabType === 'open'
+              ? 'There are currently no active trading positions to display.'
+              : 'There are currently no closed trading positions to display.'}
+          </p>
+        </div>
+      );
     }
-
-    // Apply sorting
-    filteredTrades.sort((a, b) => {
-      const multiplier = filters.sortDirection === 'asc' ? 1 : -1;
-      
-      if (filters.sortBy === 'time') {
-        return multiplier * (
-          new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
-        );
-      }
-      
-      return multiplier * (a.total_profit - b.total_profit);
-    });
-
-    return filteredTrades;
+    
+    return (
+      <TradeGrid
+        trades={trades}
+        loading={false}
+        onClose={handleClosePosition}
+        lastUpdated={state.lastUpdated}
+      />
+    );
   };
-
-  const filteredTrades = getFilteredTrades();
 
   return (
     <div className="positions">
       <div className="positions__header">
         <div className="positions__title">
           <Title level={1}>Trading Positions</Title>
-          {/* {isConnected && (
-            <Badge status="processing" text="Live Updates" className="positions__live-indicator" />
-          )} */}
         </div>
-        <TradeFilters
-          filters={filters}
-          onFiltersChange={handleFiltersChange}
-          loading={state.loading}
-        />
       </div>
 
       <div className="positions__content">
@@ -98,26 +147,18 @@ const Positions: React.FC = () => {
             className="positions__error"
           />
         ) : (
-          <>
-            <TradeGrid
-              trades={filteredTrades}
-              loading={state.loading}
-              onClose={closePosition}
-              lastUpdated={state.lastUpdated}
-            />
-            {state.loading && (
-              <div className="positions__loading">
-                <Spin size="large" />
-              </div>
-            )}
-            {!state.loading && filteredTrades.length === 0 && (
-              <div className="positions__empty">
-                <SwapOutlined />
-                <Title level={3}>No Active Positions</Title>
-                <p>There are currently no active trading positions to display.</p>
-              </div>
-            )}
-          </>
+          <Tabs
+            activeKey={activeTab}
+            onChange={handleTabChange}
+            className="positions__tabs"
+          >
+            <TabPane tab="Open Positions" key="open">
+              {renderTabContent(openTrades, 'open')}
+            </TabPane>
+            <TabPane tab="Closed Positions" key="closed">
+              {renderTabContent(closedTrades, 'closed')}
+            </TabPane>
+          </Tabs>
         )}
       </div>
     </div>

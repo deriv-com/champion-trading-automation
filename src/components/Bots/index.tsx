@@ -1,18 +1,22 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   SearchOutlined,
   PlusOutlined,
   CloseCircleFilled,
 } from "@ant-design/icons";
-import { Button } from "antd";
+import { Button, message } from "antd";
 import { PageTitle } from "../PageTitle";
 import { BotCard } from "./components/BotCard/index";
 import { InputField } from "../InputField";
 import "./styles.scss";
 import { useNavigate } from "react-router-dom";
 import { useBots, Bot } from "../../hooks/useBots";
+import { useSSE } from "../../hooks/useSSE";
+import { useRunningBots } from "../../hooks/useRunningBots";
 import { StrategyDrawer } from "../StrategyDrawer";
 import { Strategy } from "../../types/strategy";
+import { SSEMessage, TradeUpdateMessage } from "../../types/sse";
+import { API_ENDPOINTS } from "../../config/api.config";
 
 /**
  * Bots: Displays a list of trading bots with search functionality.
@@ -30,29 +34,113 @@ export function Bots() {
 
   const [searchVisible, setSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const searchInputRef = useRef<HTMLDivElement>(null);
   
   // State for strategy drawer
   const [isStrategyDrawerOpen, setIsStrategyDrawerOpen] = useState(false);
   const [selectedStrategy, setSelectedStrategy] = useState<Strategy | null>(null);
   const [selectedBot, setSelectedBot] = useState<Bot | null>(null);
   
+  // Use the running bots hook to persist running bots state
+  const {
+    runningBots,
+    addRunningBot,
+    removeRunningBot
+  } = useRunningBots();
+  
+  // Handle SSE messages
+  const handleSseMessage = useCallback((message: SSEMessage<TradeUpdateMessage>) => {
+    console.log('SSE message received:', message);
+    // Log detailed message structure for debugging
+    console.log('Message type:', message.type);
+    console.log('Message details:', JSON.stringify(message.data, null, 2));
+    
+    // Process the message to update running bots state
+    if (message.type === 'trade_update') {
+      const data = message.data;
+      
+      // Check if this is a bot status update
+      if (data && data.session_id) {
+        const sessionId = data.session_id;
+        const isCompleted = data.is_completed;
+        
+        // Find the bot with this session ID
+        const botEntry = Object.entries(runningBots).find(([_, sid]) => sid === sessionId);
+        
+        if (botEntry) {
+          const [botId] = botEntry;
+          
+          // If the bot is completed, remove it from running bots
+          if (isCompleted) {
+            console.log(`Bot ${botId} with session ${sessionId} is now completed`);
+            removeRunningBot(botId);
+          }
+        }
+      }
+    }
+  }, [runningBots, removeRunningBot]);
+  
+  // Initialize SSE connection with default values
+  const { isConnected, connect, disconnect } = useSSE<SSEMessage<TradeUpdateMessage>>({
+    url: '',  // Will be set in useEffect
+    headers: {
+      'Authorization': '',  // Will be set in useEffect
+      'Accept': 'application/json, text/plain, */*',
+      'Content-Type': 'application/json'
+    },
+    onMessage: handleSseMessage,
+    autoConnect: false // We'll connect manually when a bot starts running
+  });
+  
+  // Set up SSE URL and headers and connect to SSE
+  useEffect(() => {
+    const setupSSE = async () => {
+      try {
+        // Import API config
+        const { API_CONFIG } = await import('../../config/api.config');
+        
+        // Update the SSE URL and headers
+        // Using the simplified SSE endpoint format
+        const sseUrl = `${API_CONFIG.BASE_URL}${API_ENDPOINTS.SSE}?account_uuid=${API_CONFIG.ACCOUNT_UUID}`;
+        console.log('SSE URL configured:', sseUrl);
+        
+        // Connect to SSE to get updates about running bots
+        if (!isConnected) {
+          connect();
+          console.log('SSE connected on component mount to track running bots');
+        }
+      } catch (error) {
+        console.error('Error setting up SSE:', error);
+      }
+    };
+    
+    setupSSE();
+    
+    // Cleanup on unmount
+    return () => {
+      if (isConnected) {
+        // We don't disconnect here because we want to keep the connection
+        // even when navigating away from the page
+        console.log('Keeping SSE connection active for bot status tracking');
+      }
+    };
+  }, [connect, isConnected]);
+  
   // Refresh bots list when component mounts or when returning from another page
   useEffect(() => {
     // Get the latest bots from localStorage
     const latestBots = getStoredBots();
     setBots(latestBots);
-  }, []);
+    
+    // Cleanup SSE connection when component unmounts
+    return () => {
+      // Disconnect from the hook's SSE if connected
+      if (isConnected) {
+        disconnect();
+        console.log('SSE hook disconnected on component unmount');
+      }
+    };
+  }, [disconnect, isConnected]);
 
-  /**
-   * handleRunBot: Handles the action of running a specific bot.
-   * Inputs: botId: string - ID of the bot to run
-   * Output: void - Currently logs the action and bot ID to console
-   */
-  const handleRunBot = (botId: string) => {
-    console.log(`Running bot ${botId}`);
-    // Implement bot running logic here
-  };
 
   const navigate = useNavigate();
 
@@ -83,55 +171,222 @@ export function Bots() {
   };
 
   /**
-   * handleSearchChange: Filters the bot list based on search query text.
-   * Inputs: e: React.ChangeEvent<HTMLInputElement> - Input change event
-   * Output: void - Updates searchQuery state and filters bot list
+   * handleSearchChange: Updates the search query and filters bots accordingly.
+   * Inputs: e: React.ChangeEvent<HTMLInputElement> - The change event
+   * Output: void - Updates search query and filters bots
    */
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value.toLowerCase();
+    const query = e.target.value;
     setSearchQuery(query);
-
+    
     if (query.trim() === "") {
       setBots(getStoredBots());
-      return;
-    }
-    
-    // Filter bots based on search query
-    const filteredBots = filterBots(query);
-
-    if (filteredBots.length === 0 && query.trim() !== "") {
-      // Show "No results found" message
-      setBots([]);
-    } else if (filteredBots.length > 0) {
-      // Show filtered results
-      setBots(filteredBots);
     } else {
-      // Show all bots if no query or no results
-      setBots(getStoredBots());
+      const filteredBots = filterBots(query);
+      setBots(filteredBots);
     }
   };
 
-  // Close search when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        searchVisible &&
-        searchInputRef.current &&
-        !searchInputRef.current.contains(event.target as Node) &&
-        !(event.target as Element).closest(".search-cancel-btn")
-      ) {
-        handleCloseSearch();
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [searchVisible]);
-
+  /**
+   * handleDeleteBot: Deletes a bot from the list.
+   * Inputs: botId: string - ID of the bot to delete
+   * Output: void - Removes the bot from the list
+   */
   const handleDeleteBot = (botId: string) => {
+    console.log(`Deleting bot ${botId}`);
     deleteBot(botId);
+    // Refresh the bots list
+    const updatedBots = getStoredBots();
+    setBots(updatedBots);
+  };
+
+  /**
+   * handleToggleBot: Handles the action of running or stopping a specific bot.
+   * Inputs: botId: string - ID of the bot to run or stop
+   * Output: void - Executes or stops the bot's trading strategy
+   */
+  const handleToggleBot = async (botId: string) => {
+    // Check if the bot is already running
+    const isRunning = !!runningBots[botId];
+    
+    try {
+      // Find the bot by ID
+      const bot = bots.find(b => b.id === botId);
+      
+      if (!bot) {
+        console.error(`Bot with ID ${botId} not found`);
+        return;
+      }
+      
+      if (isRunning) {
+        // Stop the bot
+        await stopBot(botId);
+      } else {
+        // Start the bot
+        await startBot(botId);
+      }
+    } catch (error) {
+      console.error(`Error ${isRunning ? 'stopping' : 'starting'} bot:`, error);
+      message.error(`Failed to ${isRunning ? 'stop' : 'start'} bot. Please try again.`);
+    }
+  };
+  
+  /**
+   * startBot: Starts a bot with the specified ID.
+   * Inputs: botId: string - ID of the bot to start
+   * Output: Promise<void> - Resolves when the bot is started
+   */
+  const startBot = async (botId: string) => {
+    console.log(`Starting bot ${botId}`);
+    
+    // Import the trade service
+    const { tradeService } = await import('../../services/trade/tradeService');
+    const { TradeStrategy } = await import('../../types/trade');
+    
+    // Import API config
+    const { API_CONFIG } = await import('../../config/api.config');
+    
+    // Construct the request payload based on the task requirements
+    const requestPayload = {
+      product_id: "rise_fall",
+      proposal_details: {
+        instrument_id: "frxUSDJPY",
+        duration: 60,
+        duration_unit: "seconds",
+        allow_equals: true,
+        stake: "10.00",
+        variant: "rise",
+        payout: "15.00"
+      },
+      number_of_trades: 3,
+      account_uuid: API_CONFIG.ACCOUNT_UUID
+    };
+    
+    console.log('Bot execution started:', {
+      requestPayload,
+    });
+    
+    try {
+      // Execute the trade using the repeat trade strategy
+      // Type assertion to handle the response
+      const response = await tradeService.executeTrade(
+        requestPayload,
+        TradeStrategy.REPEAT
+      ) as { session_id: string };
+      
+      console.log('Bot execution successful:', response);
+      
+      // Extract the session_id from the response
+      const sessionId = response.session_id;
+      
+      if (!sessionId) {
+        throw new Error('No session ID returned from the API');
+      }
+      
+      // Update the running bots state
+      addRunningBot(botId, sessionId);
+      
+      // Connect to SSE if not already connected
+      if (!isConnected) {
+        try {
+          // Extract account_uuid from the API response if available
+          const responseData = response as any;
+          
+          // Use the account_uuid from the response, or from the API_CONFIG if not available
+          // Make sure we're not using a placeholder value
+          let accountUuid = responseData.account_uuid || API_CONFIG.ACCOUNT_UUID;
+          
+          // Use "dummy" as the account UUID if it's set to the placeholder value
+          // This is because the backend is hardcoded to use "your_account_uuid"
+          if (accountUuid === 'your_account_uuid') {
+            console.log('Using "dummy" as account UUID since the backend is hardcoded to use "your_account_uuid"');
+            accountUuid = 'your_account_uuid';
+          }
+          
+          // Create SSE URL with the extracted account_uuid
+          // Using the simplified SSE endpoint format
+          const sseUrl = `${API_CONFIG.BASE_URL}${API_ENDPOINTS.SSE}?account_uuid=${accountUuid}`;
+          
+          console.log('Creating SSE connection with URL:', sseUrl);
+          
+          // Connect to SSE using the hook
+          connect();
+          
+          console.log('SSE connected, listening for messages...');
+          
+          // We don't need to create a direct EventSource connection as we're already using the hook
+          // This prevents duplicate SSE connections
+        } catch (error) {
+          console.error('Error connecting to SSE:', error);
+        }
+      }
+      
+      message.success('Bot started successfully');
+    } catch (error) {
+      console.error('Error starting bot:', error);
+      message.error('Failed to start bot. Please try again.');
+      throw error;
+    }
+  };
+  
+  /**
+   * stopBot: Stops a bot with the specified ID.
+   * Inputs: botId: string - ID of the bot to stop
+   * Output: Promise<void> - Resolves when the bot is stopped
+   */
+  const stopBot = async (botId: string) => {
+    console.log(`Stopping bot ${botId}`);
+    
+    const sessionId = runningBots[botId];
+    
+    if (!sessionId) {
+      console.error(`No session ID found for bot ${botId}`);
+      return;
+    }
+    
+    try {
+      // Import axios for direct API call
+      const axios = (await import('axios')).default;
+      const { API_CONFIG } = await import('../../config/api.config');
+      
+      // Make direct API call to stop the bot
+      // Using the simplified URL format without the champion_url parameter
+      const response = await axios.post(
+        // `${API_CONFIG.BASE_URL}/champion/v1/stop-trading/${sessionId}`,
+        `https://champion.mobile-bot.deriv.dev/champion/v1/stop-trading/${sessionId}`,
+        null,
+        {
+          params: {
+            account_uuid: API_CONFIG.ACCOUNT_UUID
+          },
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${API_CONFIG.CHAMPION_TOKEN}`
+          }
+        }
+      );
+      
+      console.log('Bot stopped successfully:', response.data);
+      
+      // Remove the bot from the running bots state
+      removeRunningBot(botId);
+      
+      // If there are no more running bots, disconnect from SSE
+      if (Object.keys(runningBots).length === 1) { // Check for 1 since we just removed one but state hasn't updated yet
+        // Disconnect from the hook's SSE if connected
+        if (isConnected) {
+          disconnect();
+          console.log('SSE hook disconnected, no more running bots');
+        }
+      }
+      
+      message.success('Bot stopped successfully');
+    } catch (error) {
+      console.error('Error stopping bot:', error);
+      message.error('Failed to stop bot. Please try again.');
+      throw error;
+    }
   };
 
   /**
@@ -239,9 +494,10 @@ export function Bots() {
             <BotCard
               key={bot.id}
               bot={bot}
-              onRun={() => handleRunBot(bot.id)}
+              onRun={() => handleToggleBot(bot.id)}
               onDelete={() => handleDeleteBot(bot.id)}
               onEdit={() => handleEditBot(bot)}
+              isRunning={!!runningBots[bot.id]}
             />
           ))
         ) : searchQuery.trim() !== "" ? (

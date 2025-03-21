@@ -1,3 +1,36 @@
+/**
+ * @file: router/index.tsx
+ * @description: Application routing configuration using React Router,
+ *               defining routes, navigation mappings, and route structure.
+ *
+ * @components:
+ *   - routes: Array of route objects defining the application's routing structure
+ *   - router: Configured browser router instance
+ *   - pathToTab/tabToPath: Mapping objects for navigation state synchronization
+ * @dependencies:
+ *   - react-router-dom: For routing functionality
+ *   - App: Main application component
+ *   - pages: Page components for different routes
+ * @usage:
+ *   // In main.tsx
+ *   import { RouterProvider } from 'react-router-dom';
+ *   import { router } from './router';
+ *
+ *   ReactDOM.createRoot(document.getElementById('root')!).render(
+ *     <RouterProvider router={router} />
+ *   );
+ *
+ * @architecture: Centralized routing configuration with nested routes
+ * @relationships:
+ *   - Used by: main.tsx for router initialization
+ *   - References: App component and page components
+ *   - Referenced by: Navigation components for path mapping
+ * @dataFlow: Defines how URL paths map to rendered components
+ *
+ * @ai-hints: The router uses a nested structure with App as the parent layout
+ *            and child routes rendered through the Outlet component. The mapping
+ *            objects (pathToTab/tabToPath) synchronize URL paths with UI state.
+ */
 import { createBrowserRouter, RouteObject } from 'react-router-dom';
 import App from '../App';
 import { DiscoverPage, BotsPage, PositionsPage, SettingsPage, ConfigEndpointPage } from '../pages';

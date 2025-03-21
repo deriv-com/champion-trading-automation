@@ -40,6 +40,11 @@
     align-items: center;
     margin-bottom: 16px;
 
+    &-tags {
+      display: flex;
+      gap: 8px;
+    }
+
     .ant-tag {
       margin: 0;
       font-size: 12px;

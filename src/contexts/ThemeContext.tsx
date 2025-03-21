@@ -1,3 +1,41 @@
+/**
+ * @file: ThemeContext.tsx
+ * @description: React context provider for theme management, supporting light, dark,
+ *               and system themes with automatic system preference detection.
+ *
+ * @components:
+ *   - ThemeContext: React context for theme state
+ *   - ThemeProvider: Provider component that manages theme state
+ *   - useTheme: Custom hook for consuming theme context
+ *   - Theme: Type definition for theme options
+ * @dependencies:
+ *   - React: createContext, useContext, useState, useEffect
+ *   - localStorage: For theme persistence
+ *   - MediaQueryList: For system theme preference detection
+ * @usage:
+ *   // Wrap application with provider
+ *   <ThemeProvider>
+ *     <App />
+ *   </ThemeProvider>
+ *
+ *   // Use theme in components
+ *   const { theme, toggleTheme, effectiveTheme } = useTheme();
+ *   console.log(`Current theme: ${theme}, Effective theme: ${effectiveTheme}`);
+ *
+ * @architecture: Context Provider pattern with system preference detection
+ * @relationships:
+ *   - Used by: UI components for theming
+ *   - Related to: ThemeConfigProvider in AppProviders
+ * @dataFlow:
+ *   - State: Tracks user theme preference and system preference
+ *   - Persistence: Saves theme preference to localStorage
+ *   - DOM: Updates document attributes based on effective theme
+ *
+ * @ai-hints: This context handles three theme states (light, dark, system) but
+ *            always resolves to either light or dark for actual application via
+ *            the effectiveTheme property. It includes system preference detection
+ *            and updates in real-time if the system preference changes.
+ */
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type Theme = 'light' | 'dark' | 'system';
@@ -15,8 +53,8 @@ const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   const [theme, setThemeState] = useState<Theme>(() => {
     // Check if theme preference exists in localStorage
     const savedTheme = localStorage.getItem('theme');
-    // Return saved theme or default to 'system'
-    return (savedTheme as Theme) || 'system';
+    // Return saved theme or default to 'dark'
+    return (savedTheme as Theme) || 'dark';
   });
 
   // Track system preference
