@@ -38,8 +38,8 @@ interface AuthConfig {
   oauthAppId: string;
   oauthUrl: string;
   wsUrl: string;
-  authUrl: string;
-  derivUrl: string;
+  authUrl?: string;
+  derivUrl?: string;
 }
 
 const CONFIG_STORAGE_KEY = 'auth_config_overrides';
@@ -87,8 +87,6 @@ class ConfigService {
       oauthAppId: import.meta.env.VITE_OAUTH_APP_ID || '',
       oauthUrl: import.meta.env.VITE_OAUTH_URL || '',
       wsUrl: import.meta.env.VITE_WS_URL || '',
-      authUrl: import.meta.env.VITE_Auth_Url || '',
-      derivUrl: import.meta.env.VITE_Deriv_Url || '',
     };
   }
   

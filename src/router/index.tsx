@@ -34,6 +34,7 @@
 import { createBrowserRouter, RouteObject } from 'react-router-dom';
 import App from '../App';
 import { DiscoverPage, BotsPage, PositionsPage, SettingsPage, ConfigEndpointPage } from '../pages';
+import { LoginPage } from '../pages/LoginPage';
 
 // Define routes
 export const routes: RouteObject[] = [
@@ -68,6 +69,11 @@ export const routes: RouteObject[] = [
     path: '/endpoint',
     element: <ConfigEndpointPage />,
   },
+  // New route for login page
+  {
+    path: '/login',
+    element: <LoginPage />,
+  },
 ];
 
 // Create router
@@ -80,6 +86,7 @@ export const pathToTab: Record<string, string> = {
   '/bots': 'bots',
   '/positions': 'positions',
   '/menu': 'menu',
+  '/login': 'login',
 };
 
 // Map tab name to path
@@ -88,4 +95,5 @@ export const tabToPath: Record<string, string> = {
   'bots': '/bots',
   'positions': '/positions',
   'menu': '/menu',
+  'login': '/login',
 };
