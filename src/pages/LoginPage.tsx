@@ -25,6 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import logoSvg from '../assets/favicon.svg';
 import '../styles/login.scss';
 
 const { Title } = Typography;
@@ -111,7 +112,7 @@ export function LoginPage() {
           }}
         >
           <div className="login-logo">
-            <img src="/src/assets/favicon.svg" alt="Champion Trading Logo" />
+            <img src={logoSvg} alt="Champion Trading Logo" />
           </div>
           
           <Title level={2} className="login-title">
