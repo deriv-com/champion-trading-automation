@@ -1,29 +1,29 @@
-import { configService } from '../config/configService';
-
 class OAuthService {
   constructor() {}
 
   public initiateLogin(): void {
-    const appId = configService.getValue('oauthAppId');
-    const authUrl = configService.getValue('oauthUrl');
-    
-    const params = new URLSearchParams({
-      app_id: appId,
-      l: 'en',
-      route: window.location.pathname,
-    });
-
-    window.location.href = `${authUrl}?${params.toString()}`;
+    window.location.href = '/login';
   }
 
   public getAuthParams(): Record<string, string> | null {
-    const urlParams = new URLSearchParams(window.location.search);
-    const params = Object.fromEntries(urlParams.entries());
+    return null;
+  }
+
+  public login(username: string): Record<string, string> {
+    // Generate mock auth params - accepts any credentials
+    return {
+      token1: 'mock-token-123456',
+      loginid: username,
+    };
+  }
+
+  public logout(): void {
+    // Clear auth state from localStorage
+    localStorage.removeItem('app_params');
+    localStorage.removeItem('app_auth');
     
-    // Clean up URL after extracting parameters
-    window.history.replaceState({}, document.title, window.location.pathname);
-    
-    return Object.keys(params).length > 0 ? params : null;
+    // Redirect to login page
+    window.location.href = '/login';
   }
 }
 
