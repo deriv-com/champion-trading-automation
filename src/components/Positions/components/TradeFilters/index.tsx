@@ -39,7 +39,8 @@ const TradeFilters: React.FC<TradeFiltersProps> = ({
         style={{ width: 160 }}
       >
         <Option value={TradeStrategy.REPEAT}>Repeat Trade</Option>
-        <Option value={TradeStrategy.THRESHOLD}>Threshold Trade</Option>
+        <Option value={TradeStrategy.DALEMBERT}>D'Alembert Trade</Option>
+        <Option value={TradeStrategy.MARTINGALE}>Martingale Trade</Option>
       </Select>
 
       <Select

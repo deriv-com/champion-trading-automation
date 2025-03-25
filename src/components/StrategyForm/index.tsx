@@ -11,8 +11,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Bot, useBots } from "../../hooks/useBots";
 import { TradeErrorBoundary } from "../ErrorBoundary/TradeErrorBoundary";
-import { TradeStrategy } from "../../types/trade";
-import { useTrade } from "../../contexts/TradeContext";
 import { MarketInfo } from "../../types/market";
 import MarketSelector from "../MarketSelector";
 import "./styles.scss";
@@ -29,7 +27,7 @@ export function StrategyForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showMarketSelector, setShowMarketSelector] = useState(false);
   const [selectedMarket, setSelectedMarket] = useState<MarketInfo>();
-  const { submitTrade } = useTrade();
+  // We're not using submitTrade in this component
   const { addBot, updateBot } = useBots();
   const navigate = useNavigate();
   const isEditMode = !!editBot;

@@ -243,8 +243,6 @@ export function Bots() {
    * Output: Promise<object> - The request payload for the strategy
    */
   const createRequestPayload = async (bot: Bot, strategyType: string): Promise<any> => {
-    // Import API config
-    const { API_CONFIG } = await import('../../config/api.config');
     
     // Get parameter values from the bot
     const getParamValue = (key: string, defaultValue: number): number => {
@@ -325,7 +323,6 @@ export function Bots() {
     
     // Import the trade service
     const { tradeService } = await import('../../services/trade/tradeService');
-    const { TradeStrategy } = await import('../../types/trade');
     
     // Import API config
     const { API_CONFIG } = await import('../../config/api.config');
