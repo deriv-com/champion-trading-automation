@@ -223,55 +223,148 @@ export function Bots() {
         await stopBot(botId);
       } else {
         // Start the bot
-        await startBot(botId);
+        await startBot(bot);
       }
     } catch (error) {
       console.error(`Error ${isRunning ? 'stopping' : 'starting'} bot:`, error);
       message.error(`Failed to ${isRunning ? 'stop' : 'start'} bot. Please try again.`);
     }
   };
-  
   /**
-   * startBot: Starts a bot with the specified ID.
-   * Inputs: botId: string - ID of the bot to start
+   * createRequestPayload: Creates the appropriate request payload based on the strategy type
+   * Inputs: bot: Bot - The bot to create the payload for, strategyType: TradeStrategy - The strategy type
+   * Output: Object - The request payload for the strategy
+   */
+  /**
+   * createRequestPayload: Creates the appropriate request payload based on the strategy type
+   * Inputs:
+   *   - bot: Bot - The bot to create the payload for
+   *   - strategyType: string - The strategy type
+   * Output: Promise<object> - The request payload for the strategy
+   */
+  const createRequestPayload = async (bot: Bot, strategyType: string): Promise<any> => {
+    
+    // Get parameter values from the bot
+    const getParamValue = (key: string, defaultValue: number): number => {
+      const param = bot.params.find(p => p.key === key);
+      return param ? param.value : defaultValue;
+    };
+    
+    // Create payload based on strategy type, exactly matching Postman collection format
+    switch (strategyType) {
+      case 'martingale-trade':
+        return {
+          symbol: "frxUSDJPY",
+          duration: 60,
+          profit_threshold: getParamValue('profit_threshold', 50.0),
+          loss_threshold: getParamValue('loss_threshold', 30.0),
+          size: getParamValue('initial_stake', 10.0),
+          max_stake: getParamValue('max_stake', 100.0),
+          enable_max_stake: true,
+          product_id: "rise_fall",
+          proposal_details: {
+            instrument_id: "frxUSDJPY",
+            duration: 60,
+            duration_unit: "seconds",
+            allow_equals: true,
+            stake: "10.00",
+            variant: "rise",
+            payout: "15.00"
+          },
+          payload: {}
+        };
+        
+      case 'dalembert-trade':
+        return {
+          symbol: "frxUSDJPY",
+          duration: 60,
+          profit_threshold: getParamValue('profit_threshold', 50.0),
+          loss_threshold: getParamValue('loss_threshold', 30.0),
+          size: getParamValue('initial_stake', 1.0),
+          unit: getParamValue('unit', 2.0),
+          product_id: "rise_fall",
+          proposal_details: {
+            instrument_id: "frxUSDJPY",
+            duration: 60,
+            duration_unit: "seconds",
+            allow_equals: true,
+            stake: "1.00",
+            variant: "rise",
+            payout: "1.50"
+          },
+          payload: {}
+        };
+        
+      case 'repeat-trade':
+      default:
+        return {
+          product_id: "rise_fall",
+          proposal_details: {
+            instrument_id: "frxUSDJPY",
+            duration: 60,
+            duration_unit: "seconds",
+            allow_equals: true,
+            stake: "10.00",
+            variant: "rise",
+            payout: "15.00"
+          },
+          number_of_trades: getParamValue('number_of_trades', 3)
+        };
+    }
+  };
+
+  /**
+   * startBot: Starts a bot with the specified bot object.
+   * Inputs: bot: Bot - The bot to start
    * Output: Promise<void> - Resolves when the bot is started
    */
-  const startBot = async (botId: string) => {
-    console.log(`Starting bot ${botId}`);
+  const startBot = async (bot: Bot) => {
+    console.log(`Starting bot ${bot.id}`);
     
     // Import the trade service
     const { tradeService } = await import('../../services/trade/tradeService');
-    const { TradeStrategy } = await import('../../types/trade');
     
     // Import API config
     const { API_CONFIG } = await import('../../config/api.config');
     
-    // Construct the request payload based on the task requirements
-    const requestPayload = {
-      product_id: "rise_fall",
-      proposal_details: {
-        instrument_id: "frxUSDJPY",
-        duration: 60,
-        duration_unit: "seconds",
-        allow_equals: true,
-        stake: "10.00",
-        variant: "rise",
-        payout: "15.00"
-      },
-      number_of_trades: 3,
-      account_uuid: API_CONFIG.ACCOUNT_UUID
-    };
+    // Determine the strategy type based on the bot's strategyId or strategy name
+    let strategyType: string;
+    
+    // Use the bot's strategyId if available, otherwise map the strategy name
+    if (bot.strategyId) {
+      strategyType = bot.strategyId;
+    } else {
+      // Map the bot's strategy to the corresponding strategy ID
+      switch (bot.strategy.toLowerCase()) {
+        case 'martingale':
+          strategyType = 'martingale-trade';
+          break;
+        case 'd\'alembert':
+        case 'dalembert':
+          strategyType = 'dalembert-trade';
+          break;
+        default:
+          strategyType = 'repeat-trade';
+      }
+    }
+    
+    // Construct the request payload based on the strategy type
+    // Make sure to await the async function
+    const requestPayload = await createRequestPayload(bot, strategyType);
     
     console.log('Bot execution started:', {
       requestPayload,
+      strategyType
     });
     
     try {
-      // Execute the trade using the repeat trade strategy
-      // Type assertion to handle the response
+      console.log('Executing bot with payload:', requestPayload);
+      
+      // Execute the trade using the appropriate strategy
+      // Cast the string strategy type to any to avoid type errors
       const response = await tradeService.executeTrade(
         requestPayload,
-        TradeStrategy.REPEAT
+        strategyType as any
       ) as { session_id: string };
       
       console.log('Bot execution successful:', response);
@@ -284,7 +377,7 @@ export function Bots() {
       }
       
       // Update the running bots state
-      addRunningBot(botId, sessionId);
+      addRunningBot(bot.id, sessionId);
       
       // Connect to SSE if not already connected
       if (!isConnected) {

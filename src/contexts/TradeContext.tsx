@@ -88,7 +88,7 @@ export function TradeProvider({ children }: { children: ReactNode }) {
     trades: {
       [TradeStrategy.REPEAT]: {},
       [TradeStrategy.MARTINGALE]: {},
-      [TradeStrategy.THRESHOLD]: {}
+      [TradeStrategy.DALEMBERT]: {}  // Changed from THRESHOLD
     },
     isSubmitting: false
   });
@@ -218,7 +218,7 @@ export function TradeProvider({ children }: { children: ReactNode }) {
       trades: {
         [TradeStrategy.REPEAT]: {},
         [TradeStrategy.MARTINGALE]: {},
-        [TradeStrategy.THRESHOLD]: {}
+        [TradeStrategy.DALEMBERT]: {}  // Changed from THRESHOLD
       },
       isSubmitting: false
     });

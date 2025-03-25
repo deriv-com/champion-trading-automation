@@ -19,8 +19,8 @@ const getStrategyLabel = (strategy: string): string => {
       return 'Repeat Trade';
     case TradeStrategy.MARTINGALE:
       return 'Martingale Trade';
-    case TradeStrategy.THRESHOLD:
-      return 'Threshold Trade';
+    case TradeStrategy.DALEMBERT:
+      return 'D\'Alembert Trade';
     default:
       return strategy || 'Unknown Strategy';
   }
@@ -32,7 +32,7 @@ const getStrategyColor = (strategy: string): string => {
       return 'blue';
     case TradeStrategy.MARTINGALE:
       return 'green';
-    case TradeStrategy.THRESHOLD:
+    case TradeStrategy.DALEMBERT:
       return 'purple';
     default:
       return 'default';
@@ -133,7 +133,7 @@ const TradeCard: React.FC<TradeCardProps> = ({ trade, loading, onClose: _, lastU
           </Space>
         );
       
-      case TradeStrategy.THRESHOLD:
+      case TradeStrategy.DALEMBERT:
       default:
         return (
           <Space direction="vertical" size="small">
@@ -192,10 +192,10 @@ const TradeCard: React.FC<TradeCardProps> = ({ trade, loading, onClose: _, lastU
           <Text strong>Contracts</Text>
           <div className="trade-card__contracts-list">
             {trade.contracts.map((contract, index) => (
-              <div key={contract.buy_id || index} className="trade-card__contract">
+              <div key={contract.contract_id || index} className="trade-card__contract">
                 <Text type="secondary">#{index + 1}</Text>
-                <Text copyable={{ text: contract.buy_id || '' }}>
-                  {contract.buy_id ? `${contract.buy_id.slice(0, 8)}...` : 'N/A'}
+                <Text copyable={{ text: contract.contract_id || '' }}>
+                  {contract.contract_id ? `${contract.contract_id.slice(0, 8)}...` : 'N/A'}
                 </Text>
                 <Text className={contract.profit > 0 ? 'profit' : 'loss'}>
                   {formatProfit(contract.profit)}

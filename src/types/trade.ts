@@ -118,5 +118,5 @@ export enum ContractType {
 export enum TradeStrategy {
   REPEAT = 'repeat_trade',
   MARTINGALE = 'martingale_trade',
-  THRESHOLD = 'threshold_trade'
+  DALEMBERT = 'dalembert_trade'
 }
