@@ -33,44 +33,70 @@ class TradeService {
    * executeTrade: Executes a trading session with the specified strategy.
    * Inputs:
    *   - request: TRequest - The trade request parameters
-   *   - strategy: TradeStrategy - The trading strategy to use
+   *   - strategy: TradeStrategy | string - The trading strategy to use (can be enum value or string ID)
    * Output: Promise<TResponse> - Promise with the trade response
    * Throws: TradeError if the request fails
    */
   public async executeTrade<TRequest extends object, TResponse>(
     request: TRequest,
-    strategy: TradeStrategy
+    strategy: TradeStrategy | string
   ): Promise<TResponse> {
     const headers = authStore.getHeaders();
 
     // Get the appropriate endpoint based on the strategy
     const endpoint = this.getStrategyEndpoint(strategy);
+    
+    console.log(`Executing trade with strategy: ${strategy}`);
+    console.log(`Using endpoint: ${endpoint}`);
+    console.log(`Request payload:`, request);
 
-    return await this.retryOperation(() => 
+    // Add query parameters for account_uuid and champion_url
+    const params = {
+      account_uuid: API_CONFIG.ACCOUNT_UUID,
+      champion_url: API_CONFIG.CHAMPION_API_URL
+    };
+
+    return await this.retryOperation(() =>
       apiService.post<TResponse>(
         endpoint,
         request,
-        headers
+        headers,
+        params  // Pass query parameters
       )
     );
   }
 
   /**
    * getStrategyEndpoint: Gets the API endpoint for a given strategy.
-   * Inputs: strategy: TradeStrategy - The trading strategy
+   * Inputs: strategy: TradeStrategy | string - The trading strategy (can be enum value or string ID)
    * Output: string - The corresponding API endpoint
    * Throws: Error if strategy is not supported
    */
-  private getStrategyEndpoint(strategy: TradeStrategy): string {
-    switch (strategy) {
-      case TradeStrategy.REPEAT:
-        return API_ENDPOINTS.REPEAT_TRADE;
-      case TradeStrategy.MARTINGALE:
-        return API_ENDPOINTS.Martingale_Trade;
-      case TradeStrategy.THRESHOLD:
-        return API_ENDPOINTS.Threshold_Trade;
-      default:
-        throw new Error(`Unsupported strategy: ${strategy}`);
+  private getStrategyEndpoint(strategy: TradeStrategy | string): string {
+    // Handle both enum values and string values
+    if (typeof strategy === 'string') {
+      switch (strategy) {
+        case 'repeat-trade':
+          return API_ENDPOINTS.REPEAT_TRADE;
+        case 'martingale-trade':
+          return API_ENDPOINTS.MARTINGALE_TRADE;
+        case 'dalembert-trade':
+          return API_ENDPOINTS.DALEMBERT_TRADE;
+        default:
+          throw new Error(`Unsupported strategy: ${strategy}`);
+      }
+    } else {
+      // Handle enum values
+      switch (strategy) {
+        case TradeStrategy.REPEAT:
+          return API_ENDPOINTS.REPEAT_TRADE;
+        case TradeStrategy.MARTINGALE:
+          return API_ENDPOINTS.MARTINGALE_TRADE;
+        case TradeStrategy.DALEMBERT:
+          return API_ENDPOINTS.DALEMBERT_TRADE;
+        default:
+          throw new Error(`Unsupported strategy: ${strategy}`);
+      }
     }
   }
 

@@ -18,7 +18,7 @@ const strategies: Strategy[] = [
     description: 'Increase stake after each loss to recoup prior losses with a single successful trade.'
   },
   {
-    id: 'threshold-trade',
+    id: 'dalembert-trade',  // Changed from threshold-trade
     title: 'D\'Alembert',
     description: 'Increase stake after a losing trade and reduce it after a successful trade by a predetermined number of units.'
   }

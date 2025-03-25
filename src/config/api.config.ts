@@ -43,8 +43,8 @@ export const API_ENDPOINTS = {
   IS_TRADING: '/champion/v1/is-trading',
   STOP_TRADING: '/champion/v1/stop-trading',
   STRATEGIES: '/champion/v1/strategies',
-  Threshold_Trade: '/champion/v1/threshold-trade',
-  Martingale_Trade: '/champion/v1/martingale-trade',
+  DALEMBERT_TRADE: '/champion/v1/dalembert-trade',    // Changed from Threshold_Trade and updated path
+  MARTINGALE_TRADE: '/champion/v1/martingale-trade',  // Changed from Martingale_Trade
   // WebSocket and SSE endpoints
   WS: '/champion/v1/ws',
   SSE: '/champion/v1/sse',

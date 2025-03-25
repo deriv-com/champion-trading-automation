@@ -12,6 +12,7 @@ export interface Bot {
   market: string;
   tradeType: string;
   strategy: string;
+  strategyId?: string;  // Optional strategy ID for API calls
   params: BotParam[];
 }
 

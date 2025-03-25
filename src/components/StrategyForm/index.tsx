@@ -64,7 +64,10 @@ export function StrategyForm({
       name: currentValues.botName ? currentValues.botName.toString() : "New Strategy Bot",
       market: values.market?.toString() || "",
       tradeType: values.tradeType?.toString() || "",
-      strategy: isEditMode && editBot ? editBot.strategy : "Custom",
+      // Use the strategy ID from props instead of hardcoding "Custom"
+      strategy: isEditMode && editBot ? editBot.strategy : strategyType,
+      // Store the strategy ID for API calls when the bot is run
+      strategyId: strategyId,
       params: [
         { key: "repeat_trade", label: "Repeat trade", value: Number(values.repeatTrade) },
         { key: "initial_stake", label: "Initial stake", value: Number(values.initialStake) },
@@ -83,14 +86,12 @@ export function StrategyForm({
         onBack?.();
         navigate("/bots");
       } else {
-         // Navigate to the bots list page
-         navigate("/bots");
         // Add new bot
         addBot(botData);
+        console.log("Bot created successfully:", botData);
         
-        // Submit trade through trade context (only for new bots)
-        const sessionId = await submitTrade(values, strategyId as TradeStrategy);
-        console.log("Bot created with session ID:", sessionId);
+        // Navigate to the bots list page
+        navigate("/bots");
       }
     } catch (error) {
       console.error("Failed to create/update bot:", error);

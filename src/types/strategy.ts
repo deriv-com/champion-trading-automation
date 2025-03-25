@@ -86,7 +86,7 @@ export const STRATEGY_PARAMS: Record<string, FormConfig> = {
       }
     ]
   },
-  'threshold-trade': {
+  'dalembert-trade': {  // Changed from threshold-trade
     fields: [
       ...COMMON_FIELDS,
       {

@@ -51,6 +51,16 @@
       padding: 2px 8px;
     }
   }
+  
+  &__strategy-tag {
+    display: inline-block;
+    background-color: #333;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
 
   &__session-id {
     font-size: 12px;
